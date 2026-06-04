@@ -1,7 +1,16 @@
-from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey
+import enum
+from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from database import Base
 from models.associacoes import projeto_artigo
+
+
+class StatusProjeto(str, enum.Enum):
+    #Opções de Status
+    PLANEJAMENTO = "Em Planejamento"
+    ANDAMENTO = "Em Andamento"
+    CONCLUIDO = "Concluido"
+
 
 class ProjetoModel(Base):
     __tablename__ = "projetos"
@@ -12,7 +21,7 @@ class ProjetoModel(Base):
     descricao = Column(Text, nullable=True)
     data_inicio = Column(Date, nullable=True)
     data_fim = Column(Date, nullable=True)
-    status = Column(String(50), default="Em Planejamento")
+    status = Column(Enum(StatusProjeto), default= StatusProjeto.PLANEJAMENTO, nullable=False)
 
     # chave estrangeira
     linha_pesquisa_id = Column(Integer, ForeignKey("linhas_pesquisa.id_linha"))
