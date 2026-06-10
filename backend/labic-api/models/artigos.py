@@ -1,7 +1,16 @@
-from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey
+import enum
+from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from database import Base
 from models.associacoes import projeto_artigo
+
+class StatusArtigo(str, enum.Enum):
+    #Opções de Status
+    RASCUNHO = "No Rascunho"
+    ANDAMENTO = "Em Andamento"
+    PUBLICADO = "Publicado"
+
+
 
 class ArtigoModel(Base):
     __tablename__ = "artigos"
@@ -14,7 +23,7 @@ class ArtigoModel(Base):
     revisao_bibliografica = Column(Text, nullable=True)
     arquivos_url = Column(String(1024), nullable=True)
     data_publicacao = Column(Date, nullable=True)
-    status = Column(String(50), default="Rascunho")
+    status = Column(Enum(StatusArtigo), default= StatusArtigo.ANDAMENTO, nullable=False)
 
     # chave estrangeira
     linha_pesquisa_id = Column(Integer, ForeignKey("linhas_pesquisa.id_linha"))
