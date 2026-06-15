@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 import models, schemas
 
-def get_projeto(db: Session, projeto_id):
+def get_projeto(db: Session, projeto_id: int):
     return db.query(models.ProjetoModel).filter(models.ProjetoModel.id_projeto == projeto_id).first()
 
 def get_projetos(db: Session, skip: int = 0, limit: int = 100):
