@@ -15,8 +15,8 @@ class PesquisadorArtigoModel(Base):
     __tablename__ = "pesquisadores_artigos"
 
     # atributos
-    pesquisador_id = Column(Integer, ForeignKey("pesquisadores.id_pesquisador", ondelete="CASCADE"), primary_key=True)
-    artigo_id = Column(Integer, ForeignKey("artigos.id_artigo", ondelete="CASCADE"), primary_key=True)
+    id_pesquisador = Column(Integer, ForeignKey("pesquisadores.id_pesquisador", ondelete="CASCADE"), primary_key=True)
+    id_artigo = Column(Integer, ForeignKey("artigos.id_artigo", ondelete="CASCADE"), primary_key=True)
     is_autor_publicante = Column(Boolean, nullable=False, default=False)
 
     # relacionamentos
@@ -27,8 +27,8 @@ class PesquisadorProjetoModel(Base):
     __tablename__ = "pesquisadores_projetos"
 
     # atributos
-    pesquisador_id = Column(Integer, ForeignKey("pesquisadores.id_pesquisador", ondelete="CASCADE"), primary_key=True)
-    projeto_id = Column(Integer, ForeignKey("projetos.id_projeto", ondelete="CASCADE"), primary_key=True)
+    id_pesquisador = Column(Integer, ForeignKey("pesquisadores.id_pesquisador", ondelete="CASCADE"), primary_key=True)
+    id_projeto = Column(Integer, ForeignKey("projetos.id_projeto", ondelete="CASCADE"), primary_key=True)
     papel = Column(String(50), nullable=False, default="Participante")
 
     # relacionamentos
