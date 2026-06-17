@@ -1,26 +1,37 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from schemas.artigos_schema import ArtigoCreate, ArtigoResponse
+from crud import crud_artigos
+from database import get_db
 
 router = APIRouter(prefix="/artigos", tags=["Artigos"])
 
-@router.get("/")
-def listar_artigos():
-    return [
-        {"id": 1, "titulo": "Deep Learning Aplicado", "resumo": "Estudo sobre redes neurais"},
-        {"id": 2, "titulo": "Otimização de Queries", "resumo": "Técnicas de performance em SQL"},
-    ]
+@router.get("/", response_model=list[ArtigoResponse])
+def listar_artigos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud_artigos.get_artigos(db=db, skip=skip, limit= limit)
 
-@router.get("/{id}")
-def buscar_artigo(id: int):
-    return {"id": id, "titulo": "Deep Learning Aplicado", "resumo": "Estudo sobre redes neurais"}
+@router.get("/{artigo_id}", response_model=ArtigoResponse)
+def buscar_artigo(artigo_id: int, db: Session = Depends(get_db)):
+    db_artigo = crud_artigos.get_artigo(db=db, artigo_id=artigo_id)
+    if db_artigo is None:
+        raise HTTPException(status_code=404, detail="Artigo não encontrado")
+    return db_artigo
 
-@router.post("/")
-def criar_artigo(dados: dict):
-    return {"mensagem": "Artigo criado com sucesso", "dados": dados}
+@router.post("/",response_model=ArtigoResponse)
+def criar_artigo(artigo:ArtigoCreate, db: Session = Depends(get_db)):
+    return crud_artigos.create_artigo(db=db, artigo=artigo)
 
-@router.put("/{id}")
-def atualizar_artigo(id: int, dados: dict):
-    return {"mensagem": f"Artigo {id} atualizado com sucesso", "dados": dados}
+@router.put("/{artigo_id}", response_model=ArtigoResponse)
+def atualizar_artigo(artigo_id: int, artigo_atualizado: ArtigoCreate, db: Session = Depends(get_db)):
+    db_artigo = crud_artigos.get_artigo(db=db, artigo_id=artigo_id)
+    if db_artigo is None:
+        raise HTTPException(status_code=404, detail="Artigo não encontrado")
+    return crud_artigos.update_artigo(db=db, db_artigo=db_artigo, artigo_updated=artigo_atualizado)
 
-@router.delete("/{id}")
-def deletar_artigo(id: int):
-    return {"mensagem": f"Artigo {id} deletado com sucesso"}
+@router.delete("/{artigo_id}")
+def deletar_artigo(artigo_id: int, db: Session = Depends(get_db)):
+    db_artigo = crud_artigos.get_artigo(db=db, artigo_id=artigo_id)
+    if db_artigo is None:
+        raise HTTPException(status_code=404, detail="Artigo não encontrado")
+    crud_artigos.delete_artigo(db=db, db_artigo=db_artigo)
+    return {"mensagem": f"Artigo {artigo_id} deletado com sucesso"}
