@@ -13,7 +13,7 @@ from database import get_db
 from models.pesquisadores import PesquisadorModel
 
 # inicia limitador de brute force
-rastreador_limite = Limiter(ket_func=get_remote_address)
+rastreador_limite = Limiter(key_func=get_remote_address)
 
 # modelo de geração de hashs
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
