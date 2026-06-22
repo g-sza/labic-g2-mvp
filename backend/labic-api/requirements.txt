@@ -1,0 +1,15 @@
+# Motor da API
+fastapi[standard]>=0.112.0
+
+# Banco de Dados
+SQLAlchemy>=2.0.0
+psycopg2-binary>=2.9.12
+alembic>=1.18.4
+
+# Segurança e Validação
+passlib[bcrypt]>=1.7.4
+PyJWT>=2.13.0
+slowapi>=0.1.10
+
+# Ambiente
+python-dotenv>=1.2.2
