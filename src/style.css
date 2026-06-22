@@ -1,4 +1,4 @@
-/* margens padrão */
+/* tira as margens padrão */
 * {
   margin: 0;
   padding: 0;
@@ -28,17 +28,22 @@ body {
   flex-wrap: wrap;
 }
 
-nav button {
+nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+nav button, nav a button {
   background: transparent;
   border: 1px solid white;
   color: white;
   padding: 8px 16px;
-  margin-left: 10px;
   border-radius: 8px;
   cursor: pointer;
 }
 
-nav button:hover {
+nav button:hover, nav a button:hover {
   background: white;
   color: var(--verde);
 }
@@ -109,10 +114,12 @@ nav button:hover {
 }
 
 .formulario input,
-.formulario textarea {
+.formulario textarea,
+.formulario select {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  font-family: inherit;
 }
 
 .formulario button {
@@ -122,6 +129,10 @@ nav button:hover {
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.formulario button[type="button"] {
+  background: #666;
 }
 
 /* rodapé */
@@ -140,7 +151,7 @@ nav button:hover {
   --laranja: #ff0;
 }
 
-/* responsivo */
+/* responsividade */
 @media (max-width: 768px) {
   .container {
     padding: 20px;
