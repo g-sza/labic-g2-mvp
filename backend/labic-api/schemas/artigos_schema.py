@@ -30,10 +30,17 @@ class ArtigoUpdate(BaseModel):
     data_publicacao: Optional[date] = None
     status: Optional[StatusArtigo] = None
 
+# schema de resposta para associação
+class PesquisadorArtigoResponse(BaseModel):
+    id_pesquisador: int
+    is_autor_publicante: bool
+
+    model_config = ConfigDict(from_attributes=True)
 
 #Schema de Resposta
 class ArtigoResponse(ArtigoBase):
     id_artigo: int
+    pesquisadores_associacao: list[PesquisadorArtigoResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
 

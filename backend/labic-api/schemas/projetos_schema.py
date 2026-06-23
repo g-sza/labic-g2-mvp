@@ -24,9 +24,17 @@ class ProjetoUpdate(BaseModel):
     data_fim: Optional[date] = None
     status: Optional[StatusProjeto] = None
 
+# schema de resposta para associação
+class PesquisadorProjetoResponse(BaseModel):
+    id_pesquisador: int
+    papel: str
+
+    model_config = ConfigDict(from_attributes=True)
+
 #Schema de Resposta
 class ProjetoResponse(ProjetoBase):
     id_projeto: int
+    pesquisadores_associacao: list[PesquisadorProjetoResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -14,7 +14,7 @@ def create_linha(db: Session, linha: schemas.LinhasPesquisaCreate):
     db.refresh(db_linha)
     return db_linha
 
-def update_linha(db: Session, db_linha: models.LinhaPesquisaModel, linha_atualizada: schemas.LinhasPesquisaCreate):
+def update_linha(db: Session, db_linha: models.LinhaPesquisaModel, linha_atualizada: schemas.LinhasPesquisaUpdate):
     for key, value in linha_atualizada.model_dump().items():
         setattr(db_linha, key, value)
     db.commit()

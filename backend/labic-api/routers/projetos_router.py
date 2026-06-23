@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from database import get_db
+from crud import crud_projetos
 
 router = APIRouter(prefix="/projetos", tags=["Projetos"])
 
@@ -24,3 +27,33 @@ def atualizar_projeto(id: int, dados: dict):
 @router.delete("/{id}")
 def deletar_projeto(id: int):
     return {"mensagem": f"Projeto {id} deletado com sucesso"}
+
+@router.post("/{id_projeto}/pesquisadores/{id_pesquisador}")
+def associar_pesquisador_ao_projeto(
+    id_projeto: int, 
+    id_pesquisador: int, 
+    papel: str = "Participante", 
+    db: Session = Depends(get_db)
+):
+    nova_associacao = crud_projetos.adicionar_pesquisador_projeto(
+        db=db, 
+        id_projeto=id_projeto, 
+        id_pesquisador=id_pesquisador, 
+        papel=papel
+    )
+    return {"mensagem": f"Pesquisador associado como {papel} com sucesso!"}
+
+@router.delete("/{id_projeto}/pesquisadores/{id_pesquisador}")
+def desassociar_pesquisador_do_projeto(
+    id_projeto: int, 
+    id_pesquisador: int, 
+    db: Session = Depends(get_db)
+):
+    sucesso = crud_projetos.remover_pesquisador_projeto(
+        db=db, 
+        id_projeto=id_projeto, 
+        id_pesquisador=id_pesquisador
+    )
+    if not sucesso:
+        raise HTTPException(status_code=404, detail="Associação não encontrada.")
+    return {"mensagem": "Pesquisador removido do projeto com sucesso!"}
