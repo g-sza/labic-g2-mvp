@@ -1,23 +1,35 @@
-/* tira as margens padrão */
+/* ============================================ */
+/* ESTILOS GLOBAIS - LABIC                      */
+/* ============================================ */
+
+/* Tira as margens padrão */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* cores do site */
+/* Cores do site */
 :root {
   --verde: #0f6b4f;
   --azul: #16324f;
   --laranja: #f39c12;
+  --fundo: #f5f5f5;
+  --texto: #333;
+  --branco: #fff;
 }
 
 body {
   font-family: 'Poppins', Arial, sans-serif;
-  background: #f5f5f5;
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.6;
 }
 
-/* cabeçalho */
+/* ============================================ */
+/* HEADER (NAVBAR)                              */
+/* ============================================ */
+
 .topo {
   background: var(--verde);
   color: white;
@@ -26,29 +38,66 @@ body {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+.topo h1 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 nav {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-nav button, nav a button {
+nav button,
+nav a button {
   background: transparent;
   border: 1px solid white;
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
 }
 
-nav button:hover, nav a button:hover {
+nav button:hover,
+nav a button:hover {
   background: white;
   color: var(--verde);
 }
 
-/* container principal */
+/* Botão de contraste (ícone) */
+.btn-contraste {
+  background: transparent !important;
+  border: 2px solid white !important;
+  color: white !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+}
+
+.btn-contraste:hover {
+  background: white !important;
+  color: var(--verde) !important;
+}
+
+/* ============================================ */
+/* CONTAINER PRINCIPAL                          */
+/* ============================================ */
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -56,7 +105,19 @@ nav button:hover, nav a button:hover {
   min-height: calc(100vh - 200px);
 }
 
-/* banner da home */
+/* ============================================ */
+/* PÁGINAS                                      */
+/* ============================================ */
+
+.home,
+.pagina {
+  padding: 0;
+}
+
+/* ============================================ */
+/* BANNER DA HOME                               */
+/* ============================================ */
+
 .banner {
   background: linear-gradient(135deg, var(--verde), var(--azul));
   color: white;
@@ -71,17 +132,30 @@ nav button:hover, nav a button:hover {
   margin-bottom: 16px;
 }
 
+.banner p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
 .banner button {
   background: var(--laranja);
   color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
-  margin-top: 16px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* grid e cards */
+.banner button:hover {
+  transform: scale(1.05);
+}
+
+/* ============================================ */
+/* GRID E CARDS                                 */
+/* ============================================ */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -90,10 +164,16 @@ nav button:hover, nav a button:hover {
 }
 
 .card {
-  background: white;
+  background: var(--branco);
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .card h2 {
@@ -106,7 +186,20 @@ nav button:hover, nav a button:hover {
   margin-bottom: 12px;
 }
 
-/* formulários */
+.card p {
+  color: var(--texto);
+  line-height: 1.6;
+}
+
+.card ul {
+  margin-left: 20px;
+  color: var(--texto);
+}
+
+/* ============================================ */
+/* FORMULÁRIOS                                  */
+/* ============================================ */
+
 .formulario {
   display: flex;
   flex-direction: column;
@@ -120,6 +213,20 @@ nav button:hover, nav a button:hover {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-family: inherit;
+  font-size: 1rem;
+}
+
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+  outline: none;
+  border-color: var(--laranja);
+}
+
+.formulario label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
 }
 
 .formulario button {
@@ -129,13 +236,30 @@ nav button:hover, nav a button:hover {
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.formulario button:hover {
+  transform: scale(1.02);
 }
 
 .formulario button[type="button"] {
   background: #666;
 }
 
-/* rodapé */
+.formulario button[type="button"]:hover {
+  background: #888;
+}
+
+/* ============================================ */
+/* RODAPÉ                                       */
+/* ============================================ */
+
 .rodape {
   background: var(--azul);
   color: white;
@@ -144,29 +268,255 @@ nav button:hover, nav a button:hover {
   margin-top: 40px;
 }
 
-/* alto contraste */
-.high-contrast {
-  --verde: #000;
-  --azul: #000;
-  --laranja: #ff0;
+.rodape p {
+  margin: 4px 0;
 }
 
-/* responsividade */
+/* ============================================ */
+/* MENSAGENS DE FEEDBACK                        */
+/* ============================================ */
+
+.sucesso {
+  background: #10B981;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.erro {
+  background: #EF4444;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* ============================================ */
+/* RESPONSIVIDADE                               */
+/* ============================================ */
+
 @media (max-width: 768px) {
   .container {
     padding: 20px;
   }
-  
+
   .banner h1 {
     font-size: 1.8rem;
   }
-  
+
+  .banner p {
+    font-size: 1rem;
+  }
+
   .topo {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .grid {
     grid-template-columns: 1fr;
   }
+
+  nav {
+    justify-content: center;
+  }
+}
+
+/* ============================================ */
+/* ALTO CONTRASTE - VERSÃO MELHORADA           */
+/* ============================================ */
+
+.high-contrast {
+  --verde: #000000;
+  --azul: #000000;
+  --laranja: #FFFF00;
+  --fundo: #000000;
+  --texto: #FFFFFF;
+  --branco: #1a1a1a;
+}
+
+/* Força cores no alto contraste */
+.high-contrast body {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+.high-contrast .topo {
+  background-color: #000000 !important;
+  border-bottom: 3px solid #FFFF00 !important;
+}
+
+.high-contrast .topo h1 {
+  color: #FFFF00 !important;
+}
+
+.high-contrast nav button,
+.high-contrast nav a button {
+  background: transparent !important;
+  border: 2px solid #FFFF00 !important;
+  color: #FFFF00 !important;
+}
+
+.high-contrast nav button:hover,
+.high-contrast nav a button:hover {
+  background: #FFFF00 !important;
+  color: #000000 !important;
+}
+
+.high-contrast .container {
+  background-color: #000000 !important;
+}
+
+.high-contrast .banner {
+  background: #000000 !important;
+  border: 3px solid #FFFF00 !important;
+}
+
+.high-contrast .banner h1 {
+  color: #FFFF00 !important;
+}
+
+.high-contrast .banner p {
+  color: #FFFFFF !important;
+}
+
+.high-contrast .banner button {
+  background: #FFFF00 !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.high-contrast .card {
+  background: #1a1a1a !important;
+  border: 2px solid #FFFFFF !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+
+.high-contrast .card h2 {
+  color: #FFFF00 !important;
+}
+
+.high-contrast .card h3 {
+  color: #FFFF00 !important;
+}
+
+.high-contrast .card p,
+.high-contrast .card ul,
+.high-contrast .card li {
+  color: #FFFFFF !important;
+}
+
+.high-contrast .card strong {
+  color: #FFFF00 !important;
+}
+
+.high-contrast .rodape {
+  background: #000000 !important;
+  border-top: 3px solid #FFFF00 !important;
+  color: #FFFFFF !important;
+}
+
+.high-contrast .rodape p {
+  color: #FFFFFF !important;
+}
+
+/* Formulários */
+.high-contrast form {
+  background: #1a1a1a !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+.high-contrast label {
+  color: #FFFF00 !important;
+}
+
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+  background: #000000 !important;
+  border: 2px solid #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+.high-contrast input:focus,
+.high-contrast textarea:focus,
+.high-contrast select:focus {
+  border-color: #FFFF00 !important;
+  outline: 2px solid #FFFF00 !important;
+}
+
+.high-contrast .formulario button {
+  background: #FFFF00 !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.high-contrast .formulario button[type="button"] {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+}
+
+/* Mensagens de feedback */
+.high-contrast .sucesso {
+  background: #000000 !important;
+  color: #00FF00 !important;
+  border: 2px solid #00FF00 !important;
+}
+
+.high-contrast .erro {
+  background: #000000 !important;
+  color: #FF0000 !important;
+  border: 2px solid #FF0000 !important;
+}
+
+/* Botão de contraste ativo */
+.high-contrast .btn-contraste {
+  background: #FFFF00 !important;
+  color: #000000 !important;
+  border-color: #FFFF00 !important;
+}
+
+/* Links */
+.high-contrast a {
+  color: #FFFF00 !important;
+}
+
+.high-contrast a:hover {
+  color: #FFFFFF !important;
+}
+
+/* Botões de ação */
+.high-contrast button {
+  background: #FFFF00 !important;
+  color: #000000 !important;
+}
+
+.high-contrast button:hover {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+}
+
+/* Dashboard - abas */
+.high-contrast .aba-ativa {
+  background: #FFFF00 !important;
+  color: #000000 !important;
+}
+
+.high-contrast .aba-inativa {
+  background: transparent !important;
+  color: #FFFFFF !important;
+  border-bottom: 2px solid #FFFFFF !important;
+}
+
+/* Dashboard - cards de listagem */
+.high-contrast .card button {
+  background: #FF0000 !important;
+  color: #FFFFFF !important;
+}
+
+.high-contrast .card button:hover {
+  background: #FFFFFF !important;
+  color: #000000 !important;
 }
