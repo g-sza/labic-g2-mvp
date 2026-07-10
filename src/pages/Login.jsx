@@ -1,7 +1,6 @@
-// Tela de login só admin entra
-
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -15,11 +14,8 @@ function Login() {
     setCarregando(true)
     setErro('')
 
-    // Simula uma requisição pro backend
     setTimeout(() => {
-      // Credenciais de teste
       if (email === 'admin@labic.com' && senha === '123456') {
-        // Salva o token no navegador
         localStorage.setItem('labic_token', 'admin_logado')
         navigate('/dashboard')
       } else {
@@ -32,33 +28,45 @@ function Login() {
   return (
     <div className="pagina">
       <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-        <h2>Login Administrativo</h2>
-        
-        {erro && <p style={{ color: 'red' }}>{erro}</p>}
-        
-        <form className="formulario" onSubmit={handleSubmit}>
-          <input 
-            type="email" 
-            placeholder="Email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required 
-          />
-          <input 
-            type="password" 
-            placeholder="Senha" 
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required 
-          />
-          <button type="submit" disabled={carregando}>
-            {carregando ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
-        
-        <p style={{ marginTop: '1rem', fontSize: '0.8rem' }}>
-          Teste: admin@labic.com / 123456
-        </p>
+        <div className="card">
+          <h2 style={{ textAlign: 'center' }}>🔐 Login Administrativo</h2>
+          
+          {erro && <p style={{ color: 'red', textAlign: 'center' }}>{erro}</p>}
+          
+          <form className="formulario" onSubmit={handleSubmit}>
+            <div style={{ position: 'relative' }}>
+              <FaUser style={{ position: 'absolute', top: '12px', left: '12px', color: '#999' }} />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{ paddingLeft: '35px' }}
+                required 
+              />
+            </div>
+            
+            <div style={{ position: 'relative' }}>
+              <FaLock style={{ position: 'absolute', top: '12px', left: '12px', color: '#999' }} />
+              <input 
+                type="password" 
+                placeholder="Senha" 
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                style={{ paddingLeft: '35px' }}
+                required 
+              />
+            </div>
+            
+            <button type="submit" disabled={carregando} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <FaSignInAlt /> {carregando ? 'Entrando...' : 'Entrar'}
+            </button>
+          </form>
+          
+          <p style={{ marginTop: '1rem', fontSize: '0.8rem', textAlign: 'center', color: '#666' }}>
+            Teste: admin@labic.com / 123456
+          </p>
+        </div>
       </div>
     </div>
   )
