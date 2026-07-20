@@ -30,13 +30,20 @@ def associar_pesquisador_ao_artigo(
     db: Session = Depends(get_db),
     admin=Depends(verificar_permissao_admin)
 ):
-    crud_artigos.adicionar_pesquisador_artigo(
+    nova_associacao = crud_artigos.adicionar_pesquisador_artigo(
         db=db, 
         id_artigo=artigo_id, 
         id_pesquisador=pesquisador_id, 
         is_autor_publicante=is_autor_publicante
     )
-    return {"mensagem": "Pesquisador associado ao artigo com sucesso!"}
+    return {
+        "mensagem": "Pesquisador associado ao artigo com sucesso!",
+        "dados": {
+            "id_artigo": nova_associacao.id_artigo,
+            "id_pesquisador": nova_associacao.id_pesquisador,
+            "is_autor_publicante": nova_associacao.is_autor_publicante
+        }
+    }
 
 @router.put("/{artigo_id}", response_model=ArtigoResponse)
 def atualizar_artigo(artigo_id: int, artigo_atualizado: ArtigoUpdate, db: Session = Depends(get_db), admin=Depends(verificar_permissao_admin)):

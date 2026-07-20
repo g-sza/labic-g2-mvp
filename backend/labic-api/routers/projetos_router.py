@@ -45,13 +45,20 @@ def associar_pesquisador_ao_projeto(
     db: Session = Depends(get_db),
     admin=Depends(verificar_permissao_admin)
 ):
-    crud_projetos.adicionar_pesquisador_projeto(
+    nova_associacao = crud_projetos.adicionar_pesquisador_projeto(
         db=db, 
         id_projeto=id_projeto, 
         id_pesquisador=id_pesquisador, 
         papel=papel
     )
-    return {"mensagem": f"Pesquisador associado como {papel} com sucesso!"}
+    return {
+        "mensagem": f"Pesquisador associado como {papel} com sucesso!",
+        "dados": {
+            "id_projeto": nova_associacao.id_projeto,
+            "id_pesquisador": nova_associacao.id_pesquisador,
+            "papel": nova_associacao.papel
+        }
+    }
 
 @router.delete("/{id_projeto}/pesquisadores/{id_pesquisador}")
 def desassociar_pesquisador_do_projeto(
