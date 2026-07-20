@@ -1,26 +1,39 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from database import get_db
+from crud import crud_pesquisadores
+from schemas.pesquisadores_schema import PesquisadoresCreate, PesquisadoresUpdate, PesquisadoresResponse
+from core.security import gerar_hash_senha
 
 router = APIRouter(prefix="/pesquisadores", tags=["Pesquisadores"])
 
-@router.get("/")
-def listar_pesquisadores():
-    return [
-        {"id": 1, "nome": "João Silva", "area": "Inteligência Artificial"},
-        {"id": 2, "nome": "Maria Souza", "area": "Banco de Dados"},
-    ]
+@router.get("/", response_model=list[PesquisadoresResponse])
+def listar_pesquisadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud_pesquisadores.get_pesquisadores(db=db, skip=skip, limit=limit)
 
-@router.get("/{id}")
-def buscar_pesquisador(id: int):
-    return {"id": id, "nome": "João Silva", "area": "Inteligência Artificial"}
+@router.get("/{id}", response_model=PesquisadoresResponse)
+def buscar_pesquisador(id: int, db: Session = Depends(get_db)):
+    db_pesquisador = crud_pesquisadores.get_pesquisador(db=db, pesquisador_id=id)
+    if db_pesquisador is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pesquisador não encontrado")
+    return db_pesquisador
 
-@router.post("/")
-def criar_pesquisador(dados: dict):
-    return {"mensagem": "Pesquisador criado com sucesso", "dados": dados}
+@router.post("/", response_model=PesquisadoresResponse, status_code=status.HTTP_201_CREATED)
+def criar_pesquisador(pesquisador: PesquisadoresCreate, db: Session = Depends(get_db)):
+    pesquisador.senha_hash = gerar_hash_senha(pesquisador.senha_hash)
+    return crud_pesquisadores.create_pesquisador(db=db, pesquisador=pesquisador)
 
-@router.put("/{id}")
-def atualizar_pesquisador(id: int, dados: dict):
-    return {"mensagem": f"Pesquisador {id} atualizado com sucesso", "dados": dados}
+@router.put("/{id}", response_model=PesquisadoresResponse)
+def atualizar_pesquisador(id: int, pesquisador_atualizado: PesquisadoresUpdate, db: Session = Depends(get_db)):
+    db_pesquisador = crud_pesquisadores.get_pesquisador(db=db, pesquisador_id=id)
+    if db_pesquisador is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pesquisador não encontrado")
+    return crud_pesquisadores.update_pesquisador(db=db, db_pesquisador=db_pesquisador, pesquisador_atualizado=pesquisador_atualizado)
 
-@router.delete("/{id}")
-def deletar_pesquisador(id: int):
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def deletar_pesquisador(id: int, db: Session = Depends(get_db)):
+    db_pesquisador = crud_pesquisadores.get_pesquisador(db=db, pesquisador_id=id)
+    if db_pesquisador is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pesquisador não encontrado")
+    crud_pesquisadores.delete_pesquisador(db=db, db_pesquisador=db_pesquisador)
     return {"mensagem": f"Pesquisador {id} deletado com sucesso"}
