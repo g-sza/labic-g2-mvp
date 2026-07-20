@@ -1,31 +1,39 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import get_db
 from crud import crud_projetos
+from schemas.projetos_schema import ProjetoCreate, ProjetoUpdate, ProjetoResponse
 
 router = APIRouter(prefix="/projetos", tags=["Projetos"])
 
-@router.get("/")
-def listar_projetos():
-    return [
-        {"id": 1, "titulo": "Sistema de Reconhecimento Facial", "status": "Em andamento"},
-        {"id": 2, "titulo": "Análise de Dados Climáticos", "status": "Concluído"},
-    ]
+@router.get("/", response_model=list[ProjetoResponse])
+def listar_projetos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud_projetos.get_projetos(db=db, skip=skip, limit=limit)
 
-@router.get("/{id}")
-def buscar_projeto(id: int):
-    return {"id": id, "titulo": "Sistema de Reconhecimento Facial", "status": "Em andamento"}
+@router.get("/{id}", response_model=ProjetoResponse)
+def buscar_projeto(id: int, db: Session = Depends(get_db)):
+    db_projeto = crud_projetos.get_projeto(db=db, projeto_id=id)
+    if db_projeto is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Projeto não encontrado")
+    return db_projeto
 
-@router.post("/")
-def criar_projeto(dados: dict):
-    return {"mensagem": "Projeto criado com sucesso", "dados": dados}
+@router.post("/", response_model=ProjetoResponse, status_code=status.HTTP_201_CREATED)
+def criar_projeto(projeto: ProjetoCreate, db: Session = Depends(get_db)):
+    return crud_projetos.create_projeto(db=db, projeto=projeto)
 
-@router.put("/{id}")
-def atualizar_projeto(id: int, dados: dict):
-    return {"mensagem": f"Projeto {id} atualizado com sucesso", "dados": dados}
+@router.put("/{id}", response_model=ProjetoResponse)
+def atualizar_projeto(id: int, projeto_atualizado: ProjetoUpdate, db: Session = Depends(get_db)):
+    db_projeto = crud_projetos.get_projeto(db=db, projeto_id=id)
+    if db_projeto is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Projeto não encontrado")
+    return crud_projetos.update_projeto(db=db, db_projeto=db_projeto, projeto_atualizado=projeto_atualizado)
 
-@router.delete("/{id}")
-def deletar_projeto(id: int):
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def deletar_projeto(id: int, db: Session = Depends(get_db)):
+    db_projeto = crud_projetos.get_projeto(db=db, projeto_id=id)
+    if db_projeto is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Projeto não encontrado")
+    crud_projetos.delete_projeto(db=db, db_projeto=db_projeto)
     return {"mensagem": f"Projeto {id} deletado com sucesso"}
 
 @router.post("/{id_projeto}/pesquisadores/{id_pesquisador}")
@@ -35,7 +43,7 @@ def associar_pesquisador_ao_projeto(
     papel: str = "Participante", 
     db: Session = Depends(get_db)
 ):
-    nova_associacao = crud_projetos.adicionar_pesquisador_projeto(
+    crud_projetos.adicionar_pesquisador_projeto(
         db=db, 
         id_projeto=id_projeto, 
         id_pesquisador=id_pesquisador, 
@@ -55,5 +63,5 @@ def desassociar_pesquisador_do_projeto(
         id_pesquisador=id_pesquisador
     )
     if not sucesso:
-        raise HTTPException(status_code=404, detail="Associação não encontrada.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Associação não encontrada.")
     return {"mensagem": "Pesquisador removido do projeto com sucesso!"}
