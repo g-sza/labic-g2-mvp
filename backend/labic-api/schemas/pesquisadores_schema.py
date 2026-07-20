@@ -23,7 +23,12 @@ class PesquisadoresUpdate(BaseModel):
     is_admin: Optional[bool] = None
 
 
-class PesquisadoresResponse(PesquisadoresBase):
-    id_pesquisador: int 
+class PesquisadoresResponse(BaseModel):
+    id_pesquisador: int
+    nome: str
+    email: EmailStr
+    titulacao: Optional[str] = None
+    tipo_vinculo: Optional[str] = None
+    instituicao: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)

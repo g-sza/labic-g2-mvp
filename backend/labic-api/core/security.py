@@ -63,7 +63,7 @@ def identificar_usuario(token: str = Depends(oauth2_scheme), db: Session = Depen
         credenciais = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         id_pesquisador: str = credenciais.get("sub")
 
-        if id_pequisador is None:
+        if id_pesquisador is None:
             raise erro_acesso_negado
         
     except jwt.PyJWTError:
