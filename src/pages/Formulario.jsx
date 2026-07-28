@@ -37,16 +37,17 @@ function Formulario() {
   return (
     <div className="pagina">
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <h2><FaUserPlus color="#0f6b4f" /> Cadastrar Pesquisador</h2>
+        <h2><FaUserPlus color="#0F6B4F" /> Cadastrar Pesquisador</h2>
         
-        {erro && <p style={{ color: 'red' }}>{erro}</p>}
+        {erro && <div className="erro">{erro}</div>}
         
         <form className="formulario" onSubmit={handleSubmit}>
           <div>
-            <label><FaUser color="#0f6b4f" /> Nome completo:*</label>
+            <label><FaUser color="#0F6B4F" /> Nome completo: <span className="obrigatorio">*</span></label>
             <input 
               type="text" 
               name="nome"
+              placeholder="Digite o nome completo"
               value={form.nome}
               onChange={handleChange}
               required 
@@ -54,10 +55,11 @@ function Formulario() {
           </div>
           
           <div>
-            <label>📚 Área de atuação:*</label>
+            <label>📚 Área de atuação: <span className="obrigatorio">*</span></label>
             <input 
               type="text" 
               name="area"
+              placeholder="Ex: Inteligência Artificial, IoT, Design"
               value={form.area}
               onChange={handleChange}
               required 
@@ -65,10 +67,11 @@ function Formulario() {
           </div>
           
           <div>
-            <label><FaEnvelope color="#0f6b4f" /> Email:*</label>
+            <label><FaEnvelope color="#0F6B4F" /> Email: <span className="obrigatorio">*</span></label>
             <input 
               type="email" 
               name="email"
+              placeholder="email@labic.com"
               value={form.email}
               onChange={handleChange}
               required 
@@ -76,20 +79,21 @@ function Formulario() {
           </div>
           
           <div>
-            <label><FaLink color="#0f6b4f" /> Link do Lattes:</label>
+            <label><FaLink color="#0F6B4F" /> Link do Lattes:</label>
             <input 
               type="url" 
               name="lattes"
+              placeholder="http://lattes.cnpq.br/..."
               value={form.lattes}
               onChange={handleChange}
             />
           </div>
           
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button type="button" onClick={() => navigate('/dashboard')} style={{ background: '#666' }}>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '8px' }}>
+            <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>
               <FaTimes /> Cancelar
             </button>
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="btn-primary" disabled={loading}>
               <FaCheck /> {loading ? 'Salvando...' : 'Cadastrar'}
             </button>
           </div>

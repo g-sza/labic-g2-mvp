@@ -7,8 +7,7 @@ function Home() {
   return (
     <div className="home">
       <div className="banner">
-        <h1>🚀 LABIC - Inovação e Criatividade</h1>
-        <p>Transformando ideias em soluções reais</p>
+        <h1>LABIC - Portal Institucional e Gestão de Pesquisa (MVP)</h1>
         <button onClick={() => navigate('/dashboard')}>
           Conheça nossos projetos
         </button>
@@ -16,19 +15,19 @@ function Home() {
 
       <div className="grid">
         <div className="card">
-          <FaFlask size={40} color="#0f6b4f" />
+          <FaFlask size={40} color="#0F6B4F" />
           <h3>Pesquisa Aplicada</h3>
           <p>Soluções tecnológicas para problemas reais da sociedade</p>
         </div>
         
         <div className="card">
-          <FaLightbulb size={40} color="#f39c12" />
+          <FaLightbulb size={40} color="#FFD700" />
           <h3>Inovação Aberta</h3>
           <p>Espaço colaborativo para estudantes, pesquisadores e empresas</p>
         </div>
         
         <div className="card">
-          <FaBook size={40} color="#0f6b4f" />
+          <FaBook size={40} color="#0F6B4F" />
           <h3>Produção Acadêmica</h3>
           <p>Artigos, projetos e pesquisas de alto impacto publicados</p>
         </div>

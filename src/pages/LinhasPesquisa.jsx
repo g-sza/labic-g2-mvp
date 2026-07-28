@@ -1,27 +1,53 @@
+import { FaRobot, FaWifi, FaPalette, FaLeaf } from 'react-icons/fa'
+
 function LinhasPesquisa() {
-  // lista das linhas de pesquisa
   const linhas = [
-    { id: 1, titulo: "Inteligência Artificial", descricao: "Machine learning e visão computacional", coordenador: "Prof. Carlos" },
-    { id: 2, titulo: "Internet das Coisas", descricao: "Dispositivos conectados", coordenador: "Profa. Ana" },
-    { id: 3, titulo: "Design Digital", descricao: "Novas interfaces", coordenador: "Prof. Ricardo" },
-    { id: 4, titulo: "Sustentabilidade", descricao: "Tecnologia verde", coordenador: "Profa. Mariana" }
+    { 
+      id: 1, 
+      icone: <FaRobot size={40} color="#0F6B4F" />,
+      titulo: "Inteligência Artificial", 
+      descricao: "Machine learning, visão computacional e processamento de linguagem natural para problemas do cotidiano.", 
+      coordenador: "Prof. Dr. Carlos Mendes" 
+    },
+    { 
+      id: 2, 
+      icone: <FaWifi size={40} color="#0F6B4F" />,
+      titulo: "Internet das Coisas", 
+      descricao: "Dispositivos conectados para cidades inteligentes, agricultura de precisão e saúde digital.", 
+      coordenador: "Profa. Dra. Ana Carolina Silva" 
+    },
+    { 
+      id: 3, 
+      icone: <FaPalette size={40} color="#0F6B4F" />,
+      titulo: "Design Digital", 
+      descricao: "Novas interfaces, experiências imersivas e metodologias criativas para soluções digitais.", 
+      coordenador: "Prof. Me. Ricardo Oliveira" 
+    },
+    { 
+      id: 4, 
+      icone: <FaLeaf size={40} color="#0F6B4F" />,
+      titulo: "Sustentabilidade", 
+      descricao: "Soluções tecnológicas para eficiência energética, gestão de resíduos e desenvolvimento sustentável.", 
+      coordenador: "Profa. Dra. Mariana Costa" 
+    }
   ]
 
   return (
     <div className="pagina">
-      <h2>Linhas de Pesquisa</h2>
+      <h2>🔬 Linhas de Pesquisa</h2>
+      <p>O LABIC organiza suas atividades em quatro grandes linhas de pesquisa:</p>
       
       <div className="grid">
-        {linhas.map(function(linha) {
-          return (
-            <div key={linha.id} className="card">
-              <h2>{linha.icone}</h2>
-              <h3>{linha.titulo}</h3>
-              <p>{linha.descricao}</p>
-              <p><strong>Coordenador:</strong> {linha.coordenador}</p>
-            </div>
-          )
-        })}
+        {linhas.map(linha => (
+          <div key={linha.id} className="card">
+            {linha.icone}
+            <h3>{linha.titulo}</h3>
+            <p>{linha.descricao}</p>
+            <p style={{ color: '#0F6B4F', marginTop: '0.5rem', fontWeight: 'bold' }}>
+              📌 Coordenador: {linha.coordenador}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   )

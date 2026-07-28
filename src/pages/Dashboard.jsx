@@ -52,63 +52,36 @@ function Dashboard() {
     <div className="pagina">
       <h2>📊 Dashboard de Gestão</h2>
       
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-        <Link to="/novo-pesquisador">
-          <button><FaUserPlus /> Novo Pesquisador</button>
+      <div className="dashboard-actions">
+        <Link to="/novo-pesquisador" className="btn-acao">
+          <FaUserPlus /> Novo Pesquisador
         </Link>
-        <Link to="/novo-projeto">
-          <button><FaPlus /> Novo Projeto</button>
+        <Link to="/novo-projeto" className="btn-acao">
+          <FaPlus /> Novo Projeto
         </Link>
-        <Link to="/novo-artigo">
-          <button><FaPlus /> Novo Artigo</button>
+        <Link to="/novo-artigo" className="btn-acao">
+          <FaPlus /> Novo Artigo
         </Link>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '2px solid #ddd', marginBottom: '1.5rem' }}>
+      <div className="abas-container">
         <button 
+          className={`aba ${aba === 'pesquisadores' ? 'ativa' : ''}`}
           onClick={() => setAba('pesquisadores')}
-          style={{ 
-            background: aba === 'pesquisadores' ? '#f39c12' : 'transparent',
-            color: aba === 'pesquisadores' ? 'white' : '#333',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '8px 8px 0 0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
         >
-          <FaUsers /> Pesquisadores ({pesquisadores.length})
+          <FaUsers /> Pesquisadores <span className="badge">{pesquisadores.length}</span>
         </button>
         <button 
+          className={`aba ${aba === 'projetos' ? 'ativa' : ''}`}
           onClick={() => setAba('projetos')}
-          style={{ 
-            background: aba === 'projetos' ? '#f39c12' : 'transparent',
-            color: aba === 'projetos' ? 'white' : '#333',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '8px 8px 0 0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
         >
-          <FaProjectDiagram /> Projetos ({projetos.length})
+          <FaProjectDiagram /> Projetos <span className="badge">{projetos.length}</span>
         </button>
         <button 
+          className={`aba ${aba === 'artigos' ? 'ativa' : ''}`}
           onClick={() => setAba('artigos')}
-          style={{ 
-            background: aba === 'artigos' ? '#f39c12' : 'transparent',
-            color: aba === 'artigos' ? 'white' : '#333',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '8px 8px 0 0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
         >
-          <FaFileAlt /> Artigos ({artigos.length})
+          <FaFileAlt /> Artigos <span className="badge">{artigos.length}</span>
         </button>
       </div>
 
@@ -118,13 +91,13 @@ function Dashboard() {
         <div className="grid">
           {pesquisadores.map(p => (
             <div key={p.id} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <h3><FaUsers color="#0f6b4f" /> {p.nome}</h3>
+                  <h3><FaUsers color="#0F6B4F" /> {p.nome}</h3>
                   <p><strong>Área:</strong> {p.area}</p>
                   <p><strong>Email:</strong> {p.email}</p>
                 </div>
-                <button onClick={() => handleDeletePesquisador(p.id)} style={{ background: '#EF4444', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button className="btn-excluir" onClick={() => handleDeletePesquisador(p.id)}>
                   <FaTrash /> Excluir
                 </button>
               </div>
@@ -137,13 +110,13 @@ function Dashboard() {
         <div className="grid">
           {projetos.map(p => (
             <div key={p.id} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <h3><FaProjectDiagram color="#0f6b4f" /> {p.titulo}</h3>
+                  <h3><FaProjectDiagram color="#0F6B4F" /> {p.titulo}</h3>
                   <p>{p.descricao}</p>
                   <p><strong>Responsável:</strong> {p.pesquisadorResponsavel}</p>
                 </div>
-                <button onClick={() => handleDeleteProjeto(p.id)} style={{ background: '#EF4444', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button className="btn-excluir" onClick={() => handleDeleteProjeto(p.id)}>
                   <FaTrash /> Excluir
                 </button>
               </div>
@@ -156,13 +129,13 @@ function Dashboard() {
         <div className="grid">
           {artigos.map(a => (
             <div key={a.id} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <h3><FaFileAlt color="#0f6b4f" /> {a.titulo}</h3>
+                  <h3><FaFileAlt color="#0F6B4F" /> {a.titulo}</h3>
                   <p><strong>Autores:</strong> {a.autores}</p>
                   <p>{a.resumo}</p>
                 </div>
-                <button onClick={() => handleDeleteArtigo(a.id)} style={{ background: '#EF4444', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button className="btn-excluir" onClick={() => handleDeleteArtigo(a.id)}>
                   <FaTrash /> Excluir
                 </button>
               </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa'
+import { FaUser, FaSignInAlt } from 'react-icons/fa'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -28,43 +28,45 @@ function Login() {
   return (
     <div className="pagina">
       <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-        <div className="card">
-          <h2 style={{ textAlign: 'center' }}>🔐 Login Administrativo</h2>
+        <div className="card" style={{ padding: '32px' }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '8px' }}>🔐 Login Administrativo</h2>
+          <p style={{ textAlign: 'center', color: '#666', marginBottom: '24px', fontSize: '0.9rem' }}>
+            Acesso restrito ao LABIC
+          </p>
           
-          {erro && <p style={{ color: 'red', textAlign: 'center' }}>{erro}</p>}
+          {erro && <div className="erro" style={{ textAlign: 'center' }}>{erro}</div>}
           
           <form className="formulario" onSubmit={handleSubmit}>
             <div style={{ position: 'relative' }}>
-              <FaUser style={{ position: 'absolute', top: '12px', left: '12px', color: '#999' }} />
+              <FaUser style={{ position: 'absolute', top: '14px', left: '14px', color: '#999', fontSize: '18px' }} />
               <input 
                 type="email" 
-                placeholder="Email" 
+                placeholder="admin@labic.com" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ paddingLeft: '35px' }}
+                style={{ paddingLeft: '44px' }}
                 required 
               />
             </div>
             
             <div style={{ position: 'relative' }}>
-              <FaLock style={{ position: 'absolute', top: '12px', left: '12px', color: '#999' }} />
               <input 
                 type="password" 
-                placeholder="Senha" 
+                placeholder="••••••" 
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
-                style={{ paddingLeft: '35px' }}
+                style={{ paddingLeft: '44px' }}
                 required 
               />
             </div>
             
-            <button type="submit" disabled={carregando} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <button type="submit" className="btn-primary" disabled={carregando} style={{ width: '100%', padding: '14px' }}>
               <FaSignInAlt /> {carregando ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
           
-          <p style={{ marginTop: '1rem', fontSize: '0.8rem', textAlign: 'center', color: '#666' }}>
-            Teste: admin@labic.com / 123456
+          <p style={{ marginTop: '20px', fontSize: '0.8rem', textAlign: 'center', color: '#999' }}>
+            Credenciais de teste: <strong>admin@labic.com</strong> / <strong>123456</strong>
           </p>
         </div>
       </div>

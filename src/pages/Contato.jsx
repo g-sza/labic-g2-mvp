@@ -17,7 +17,7 @@ function Contato() {
       <div className="grid">
         <div>
           <div className="card">
-            <h3><FaMapMarkerAlt color="#0f6b4f" /> Endereço</h3>
+            <h3><FaMapMarkerAlt color="#0F6B4F" /> Endereço</h3>
             <p>
               Rua da Inovação, 1000<br />
               Bairro Tecnológico<br />
@@ -26,10 +26,10 @@ function Contato() {
           </div>
           
           <div className="card" style={{ marginTop: '1rem' }}>
-            <h3><FaPhone color="#0f6b4f" /> Contato</h3>
+            <h3><FaPhone color="#0F6B4F" /> Contato</h3>
             <p>
               Telefone: (11) 3456-7890<br />
-              <FaEnvelope color="#0f6b4f" /> contato@labic.edu.br<br />
+              <FaEnvelope color="#0F6B4F" /> contato@labic.edu.br<br />
               Horário: Segunda a Sexta, 9h às 18h
             </p>
           </div>
@@ -49,7 +49,7 @@ function Contato() {
             <input type="email" placeholder="Seu email" required />
             <input type="text" placeholder="Assunto" required />
             <textarea rows="5" placeholder="Sua mensagem" required></textarea>
-            <button type="submit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <button type="submit" className="btn-primary">
               <FaPaperPlane /> Enviar
             </button>
           </form>
