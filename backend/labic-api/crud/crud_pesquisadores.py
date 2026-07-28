@@ -14,7 +14,7 @@ def create_pesquisador(db: Session, pesquisador: schemas.PesquisadoresCreate):
     db.refresh(db_pesquisador)
     return db_pesquisador
 
-def update_pesquisador(db: Session, db_pesquisador: models.PesquisadorModel, pesquisador_atualizado: schemas.PesquisadoresCreate):
+def update_pesquisador(db: Session, db_pesquisador: models.PesquisadorModel, pesquisador_atualizado: schemas.PesquisadoresUpdate):
     for key, value in pesquisador_atualizado.model_dump().items():
         setattr(db_pesquisador,key, value)
     db.commit()
