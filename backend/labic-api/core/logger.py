@@ -1,4 +1,6 @@
 import logging
+import os
+import sys
 from logging.handlers import RotatingFileHandler
 
 # traduções dos níveis de alerta
@@ -16,7 +18,7 @@ formatacao = logging.Formatter(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-# definição de tamanho máximo por arquivo e quantidade de backups
+# salva no arquivo local
 arquivo_handler = RotatingFileHandler(
     filename="api_labic.log", 
     maxBytes=5000000, 
@@ -24,6 +26,12 @@ arquivo_handler = RotatingFileHandler(
     encoding="utf-8"
 )
 arquivo_handler.setFormatter(formatacao)
-
-# adicionando o resultado
 logger.addHandler(arquivo_handler)
+
+# imprime no terminal apenas se estiver em Nuvem
+ambiente = os.getenv("AMBIENTE", "desenvolvimento")
+
+if ambiente == "producao":
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(formatacao)
+    logger.addHandler(console_handler)
