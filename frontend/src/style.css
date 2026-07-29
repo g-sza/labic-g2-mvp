@@ -644,8 +644,9 @@ button:disabled,
   background: var(--verde);
   color: white;
   text-align: center;
-  padding: 30px;
-  margin-top: 40px;
+  padding: 40px 20px;
+  margin-top: 0;
+  width: 100%;
 }
 
 .rodape p {

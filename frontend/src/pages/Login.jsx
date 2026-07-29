@@ -9,27 +9,47 @@ function Login() {
   const [carregando, setCarregando] = useState(false)
   const navigate = useNavigate()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setCarregando(true)
     setErro('')
 
-    setTimeout(() => {
-      if (email === 'admin@labic.com' && senha === '123456') {
-        localStorage.setItem('labic_token', 'admin_logado')
-        navigate('/dashboard')
-      } else {
-        setErro('Email ou senha incorretos')
+    try {
+      const resposta = await fetch('https://labic-api.onrender.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: senha,
+        }),
+      })
+
+      const dados = await resposta.json()
+
+      if (!resposta.ok) {
+        setErro(dados.detail || 'Email ou senha incorretos')
+        setCarregando(false)
+        return
       }
+
+      // Salva o token REAL que veio do backend
+      localStorage.setItem('labic_token', dados.access_token)
+      
+      navigate('/dashboard')
+    } catch (error) {
+      setErro('Erro ao conectar com o servidor. Tente novamente.')
+    } finally {
       setCarregando(false)
-    }, 800)
+    }
   }
 
   return (
     <div className="pagina">
       <div style={{ maxWidth: '400px', margin: '0 auto' }}>
         <div className="card" style={{ padding: '32px' }}>
-          <h2 style={{ textAlign: 'center', marginBottom: '8px' }}>🔐 Login Administrativo</h2>
+          <h2 style={{ textAlign: 'center', marginBottom: '8px' }}>Login Administrativo</h2>
           <p style={{ textAlign: 'center', color: '#666', marginBottom: '24px', fontSize: '0.9rem' }}>
             Acesso restrito ao LABIC
           </p>
