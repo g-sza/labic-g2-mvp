@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa'
+import { loginApi } from '../services/api'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -31,30 +32,13 @@ function Login() {
     setErro('')
 
     try {
-      const detalhesLogin = new URLSearchParams()
-      detalhesLogin.append('username', email)
-      detalhesLogin.append('password', senha)
-
-      const resposta = await fetch('https://labic-api.onrender.com/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: detalhesLogin,
-      })
-
-      const dados = await resposta.json()
-
-      if (!resposta.ok) {
-        setErro(dados.detail || 'Email ou senha incorretos')
-        setCarregando(false)
-        return
-      }
+      const dados = await loginApi(email, senha)
 
       localStorage.setItem('labic_token', dados.access_token)
       navigate('/dashboard')
+      
     } catch (error) {
-      setErro('Erro ao conectar com o servidor. Tente novamente.')
+      setErro(error.message || 'Erro ao conectar com o servidor. Tente novamente.')
     } finally {
       setCarregando(false)
     }

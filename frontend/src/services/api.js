@@ -2,16 +2,37 @@
 // API - CONEXÃO COM O BACKEND
 // ============================================
 
-const API_URL = import.meta.env.API_URL
+const API_URL = import.meta.env.VITE_API_URL
 
 // ============================================
 // FUNÇÃO PARA PEGAR O TOKEN
 // ============================================
-
 function getToken() {
-  const token = localStorage.getItem('labic_token')
-  console.log('Token sendo usado:', token)  // ← veja se o token existe
-  return token
+  return localStorage.getItem('labic_token')
+}
+
+// ============================================
+// AUTENTICAÇÃO
+// ============================================
+export async function loginApi(email, senha) {
+  const detalhesLogin = new URLSearchParams()
+  detalhesLogin.append('username', email)
+  detalhesLogin.append('password', senha)
+
+  const resposta = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: detalhesLogin,
+  })
+
+  const dados = await resposta.json()
+
+  if (!resposta.ok) {
+    throw new Error(dados.detail || 'Email ou senha incorretos')
+  }
+  return dados
 }
 
 // ============================================
