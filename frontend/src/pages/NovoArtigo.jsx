@@ -18,13 +18,13 @@ function NovoArtigo() {
     revisao_bibliografica: '',
     arquivos_url: '',
     data_publicacao: '',
-    status: 'No Rascunho' 
+    status: 'Rascunho' 
   })
   
   const [erro, setErro] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const exigeCamposBase = form.status !== 'No Rascunho'
+  const exigeCamposBase = form.status !== 'Rascunho'
   const exigeCamposPublicacao = form.status === 'Publicado'
 
   useEffect(() => {
@@ -150,7 +150,7 @@ function NovoArtigo() {
           </div>
 
           <div>
-            <label>Coautores (Opcional)</label>
+            <label>Coautores</label>
             <select value={coautorSelecionado} onChange={handleAdicionarCoautor}>
               <option value="" disabled>Selecione para adicionar um coautor...</option>
               {pesquisadores

@@ -6,7 +6,7 @@ from models.associacoes import projeto_artigo
 
 class StatusArtigo(str, enum.Enum):
     #Opções de Status
-    RASCUNHO = "No Rascunho"
+    RASCUNHO = "Rascunho"
     ANDAMENTO = "Em Andamento"
     PUBLICADO = "Publicado"
 

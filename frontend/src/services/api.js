@@ -77,7 +77,7 @@ export async function deletePesquisador(id) {
   if (!resposta.ok) {
     throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`)
   }
-  return resposta.json()
+  return true
 }
 
 // ============================================
@@ -120,7 +120,7 @@ export async function deleteProjeto(id) {
   if (!resposta.ok) {
     throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`)
   }
-  return resposta.json()
+  return true
 }
 
 // ============================================
@@ -163,7 +163,7 @@ export async function deleteArtigo(id) {
   if (!resposta.ok) {
     throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`)
   }
-  return resposta.json()
+  return true
 }
 
 // ============================================

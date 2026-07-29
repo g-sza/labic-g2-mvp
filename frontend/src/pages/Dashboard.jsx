@@ -119,19 +119,20 @@ function Dashboard() {
         <div className="grid">
           {pesquisadores.map(p => (
             <div key={p.id_pesquisador} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <h3>{p.nome}</h3>
-                  <p><strong>Titulação:</strong> {p.titulacao || 'Não informada'}</p>
-                  <p><strong>Vínculo:</strong> {p.tipo_vinculo || 'Não informado'}</p>
-                  {logado && <p><strong>Email:</strong> {p.email}</p>} 
-                </div>
-                {/* Se for Admin, mostra o botão Excluir */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+                <h3 style={{ margin: 0, wordBreak: 'break-word' }}>
+                  {p.nome}
+                </h3>
                 {logado && (
-                  <button className="btn-excluir" onClick={() => handleDeletePesquisador(p.id_pesquisador)}>
+                  <button className="btn-excluir" style={{ flexShrink: 0 }} onClick={() => handleDeletePesquisador(p.id_pesquisador)}>
                     <FaTrash /> Excluir
                   </button>
                 )}
+              </div>
+              <div>
+                <p><strong>Titulação:</strong> {p.titulacao || 'Não informada'}</p>
+                <p><strong>Vínculo:</strong> {p.tipo_vinculo || 'Não informado'}</p>
+                {logado && <p><strong>Email:</strong> {p.email}</p>} 
               </div>
             </div>
           ))}
@@ -142,17 +143,19 @@ function Dashboard() {
         <div className="grid">
           {projetos.map(p => (
             <div key={p.id_projeto} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <h3>{p.titulo}</h3>
-                  <p>{p.descricao}</p>
-                  <p><strong>Status:</strong> {p.status}</p>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+                <h3 style={{ margin: 0, wordBreak: 'break-word' }}>
+                  {p.titulo}
+                </h3>
                 {logado && (
-                  <button className="btn-excluir" onClick={() => handleDeleteProjeto(p.id_projeto)}>
+                  <button className="btn-excluir" style={{ flexShrink: 0 }} onClick={() => handleDeleteProjeto(p.id_projeto)}>
                     <FaTrash /> Excluir
                   </button>
                 )}
+              </div>
+              <div>
+                <p>{p.descricao}</p>
+                <p><strong>Status:</strong> {p.status}</p>
               </div>
             </div>
           ))}
@@ -163,17 +166,19 @@ function Dashboard() {
         <div className="grid">
           {artigos.map(a => (
             <div key={a.id_artigo} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <h3>{a.titulo}</h3>
-                  <p><strong>Status:</strong> {a.status}</p>
-                  <p>{a.resumo}</p>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+                <h3 style={{ margin: 0, wordBreak: 'break-word' }}>
+                  {a.titulo}
+                </h3>
                 {logado && (
-                  <button className="btn-excluir" onClick={() => handleDeleteArtigo(a.id_artigo)}>
+                  <button className="btn-excluir" style={{ flexShrink: 0 }} onClick={() => handleDeleteArtigo(a.id_artigo)}>
                     <FaTrash /> Excluir
                   </button>
                 )}
+              </div>
+              <div>
+                <p><strong>Status:</strong> {a.status}</p>
+                <p>{a.resumo}</p>
               </div>
             </div>
           ))}
