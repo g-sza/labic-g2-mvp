@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaUser, FaSignInAlt } from 'react-icons/fa'
+import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -9,21 +9,38 @@ function Login() {
   const [carregando, setCarregando] = useState(false)
   const navigate = useNavigate()
 
+  function handleInvalid(e) {
+    if (e.target.validity.valueMissing) {
+      e.target.setCustomValidity('Este campo é obrigatório. Por favor, preencha-o.');
+    } else if (e.target.validity.typeMismatch) {
+      if (e.target.type === 'email') {
+        e.target.setCustomValidity('Por favor, insira um endereço de e-mail válido contendo "@" e um domínio.');
+      } else {
+        e.target.setCustomValidity('Formato inválido.');
+      }
+    } else if (e.target.validity.tooShort) {
+      e.target.setCustomValidity(`Este campo precisa ter no mínimo ${e.target.minLength} caracteres.`);
+    } else {
+      e.target.setCustomValidity('Valor inválido.');
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setCarregando(true)
     setErro('')
 
     try {
+      const detalhesLogin = new URLSearchParams()
+      detalhesLogin.append('username', email)
+      detalhesLogin.append('password', senha)
+
       const resposta = await fetch('https://labic-api.onrender.com/auth/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({
-          username: email,
-          password: senha,
-        }),
+        body: detalhesLogin,
       })
 
       const dados = await resposta.json()
@@ -34,9 +51,7 @@ function Login() {
         return
       }
 
-      // Salva o token REAL que veio do backend
       localStorage.setItem('labic_token', dados.access_token)
-      
       navigate('/dashboard')
     } catch (error) {
       setErro('Erro ao conectar com o servidor. Tente novamente.')
@@ -63,19 +78,31 @@ function Login() {
                 type="email" 
                 placeholder="admin@labic.com" 
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { 
+                  e.target.setCustomValidity(''); 
+                  if (!e.target.validity.valid) handleInvalid(e);
+                  setEmail(e.target.value); 
+                }}
+                onInvalid={handleInvalid}
                 style={{ paddingLeft: '44px' }}
                 required 
               />
             </div>
             
             <div style={{ position: 'relative' }}>
+              <FaLock style={{ position: 'absolute', top: '14px', left: '14px', color: '#999', fontSize: '18px' }} />
               <input 
                 type="password" 
                 placeholder="••••••" 
                 value={senha}
-                onChange={(e) => setSenha(e.target.value)}
+                onChange={(e) => { 
+                  e.target.setCustomValidity(''); 
+                  if (!e.target.validity.valid) handleInvalid(e);
+                  setSenha(e.target.value); 
+                }}
+                onInvalid={handleInvalid}
                 style={{ paddingLeft: '44px' }}
+                minLength={6}
                 required 
               />
             </div>
