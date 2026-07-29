@@ -8,8 +8,19 @@ def get_projetos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ProjetoModel).offset(skip).limit(limit).all()
 
 def create_projeto(db: Session, projeto: schemas.ProjetoCreate):
-    db_projeto = models.ProjetoModel(**projeto.model_dump())
+    dados_projeto = projeto.model_dump(exclude={"pesquisador_id"})
+    db_projeto = models.ProjetoModel(**dados_projeto)
+
     db.add(db_projeto)
+    db.flush() 
+    
+    nova_associacao = models.PesquisadorProjetoModel(
+        id_projeto=db_projeto.id_projeto,
+        id_pesquisador=projeto.pesquisador_id,
+        papel="Responsável"
+    )
+    db.add(nova_associacao)
+    
     db.commit()
     db.refresh(db_projeto)
     return db_projeto

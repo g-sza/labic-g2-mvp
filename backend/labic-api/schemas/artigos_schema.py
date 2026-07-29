@@ -1,9 +1,9 @@
 from datetime import date
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, ConfigDict, model_validator
 from models.artigos import StatusArtigo
 
-# Classe base que será usado em outras classes
+# classe base que será usado em outras classes
 class ArtigoBase(BaseModel):
     titulo: str
     resumo: Optional[str] = None
@@ -13,11 +13,11 @@ class ArtigoBase(BaseModel):
     data_publicacao: Optional[date] = None
     status: StatusArtigo = StatusArtigo.ANDAMENTO
 
-    # Validação condicional baseada no status
+    # validação condicional baseada no status
     @model_validator(mode='after')
     def validar_campos_por_status(self):
         
-        # Regra para artigos fora do Rascunho
+        # regra para artigos fora do Rascunho
         if self.status != StatusArtigo.RASCUNHO:
             erros_base = []
             if not self.resumo:
@@ -31,7 +31,7 @@ class ArtigoBase(BaseModel):
                 campos = ", ".join(erros_base)
                 raise ValueError(f"Os campos {campos} são obrigatórios para artigos em andamento ou publicados.")
 
-        # Regra exclusiva para artigos Publicados
+        # regra exclusiva para artigos Publicados
         if self.status == StatusArtigo.PUBLICADO:
             erros_publicacao = []
             if not self.data_publicacao:
@@ -45,11 +45,12 @@ class ArtigoBase(BaseModel):
                 
         return self
 
-# Schema de Criação
+# schema de criação 
 class ArtigoCreate(ArtigoBase):
-    pass
+    autor_principal_id: int
+    coautor_ids: List[int] = []
 
-# Schema de Atualização
+# schema de atualização
 class ArtigoUpdate(BaseModel):
     titulo: Optional[str] = None
     resumo: Optional[str] = None
@@ -66,7 +67,7 @@ class PesquisadorArtigoResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-# Schema de Resposta
+# schema de resposta
 class ArtigoResponse(ArtigoBase):
     id_artigo: int
     pesquisadores_associacao: list[PesquisadorArtigoResponse] = []

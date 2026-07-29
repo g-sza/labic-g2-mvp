@@ -14,7 +14,7 @@ class ProjetoBase(BaseModel):
 
 #Schema de Criação
 class ProjetoCreate(ProjetoBase):
-    pass
+    pesquisador_id: int
 
 #Schema de Atualização
 class ProjetoUpdate(BaseModel):

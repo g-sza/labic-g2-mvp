@@ -1,12 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createArtigo } from '../services/api'
+import { createArtigo, getPesquisadores } from '../services/api'
+import { FaTimes } from 'react-icons/fa'
 
 function NovoArtigo() {
   const navigate = useNavigate()
   
+  const [pesquisadores, setPesquisadores] = useState([])
+  const [coautorSelecionado, setCoautorSelecionado] = useState('')
+
   const [form, setForm] = useState({ 
     titulo: '', 
+    autor_principal_id: '',
+    coautor_ids: [],
     resumo: '', 
     metodologia: '', 
     revisao_bibliografica: '',
@@ -21,9 +27,45 @@ function NovoArtigo() {
   const exigeCamposBase = form.status !== 'No Rascunho'
   const exigeCamposPublicacao = form.status === 'Publicado'
 
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const dados = await getPesquisadores()
+        setPesquisadores(dados)
+      } catch (error) {
+        console.error("Erro ao carregar pesquisadores", error)
+      }
+    }
+    carregar()
+  }, [])
+
   function handleChange(e) {
     e.target.setCustomValidity('');
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const { name, value } = e.target;
+    
+    let novoForm = { ...form, [name]: value };
+
+    if (name === 'autor_principal_id') {
+      const idNum = parseInt(value);
+      novoForm.coautor_ids = novoForm.coautor_ids.filter(id => id !== idNum);
+    }
+
+    setForm(novoForm);
+  }
+
+  function handleAdicionarCoautor(e) {
+    const id = parseInt(e.target.value);
+    if (id && !form.coautor_ids.includes(id)) {
+      setForm({ ...form, coautor_ids: [...form.coautor_ids, id] });
+    }
+    setCoautorSelecionado(''); 
+  }
+
+  function removerCoautor(idParaRemover) {
+    setForm({ 
+      ...form, 
+      coautor_ids: form.coautor_ids.filter(id => id !== idParaRemover) 
+    });
   }
 
   function handleInvalid(e) {
@@ -31,7 +73,7 @@ function NovoArtigo() {
       e.target.setCustomValidity('Este campo é obrigatório. Por favor, preencha-o.');
     } else if (e.target.validity.typeMismatch) {
       if (e.target.type === 'url') {
-        e.target.setCustomValidity('Por favor, insira uma URL válida.');
+        e.target.setCustomValidity('Por favor, insira uma URL válida (exemplo: https://meusite.com).');
       } else {
         e.target.setCustomValidity('Formato inválido.');
       }
@@ -43,8 +85,8 @@ function NovoArtigo() {
   async function handleSubmit(e) {
     e.preventDefault()
     
-    if (!form.titulo) {
-      setErro('O título é obrigatório.')
+    if (!form.titulo || !form.autor_principal_id) {
+      setErro('O título e o autor principal são obrigatórios.')
       return
     }
 
@@ -67,12 +109,17 @@ function NovoArtigo() {
     
     try {
       const payload = { ...form }
+      
+      payload.autor_principal_id = parseInt(payload.autor_principal_id)
+      payload.coautor_ids = payload.coautor_ids.map(id => parseInt(id))
+
       if (payload.data_publicacao === '') payload.data_publicacao = null
 
       await createArtigo(payload)
+
       navigate('/dashboard')
     } catch (error) {
-      setErro('Erro ao cadastrar. Tente novamente.')
+      setErro('Erro ao cadastrar o artigo. Verifique os dados e tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -91,11 +138,57 @@ function NovoArtigo() {
             <label>Título <span className="obrigatorio">*</span></label>
             <input type="text" name="titulo" value={form.titulo} onChange={handleChange} onInvalid={handleInvalid} required />
           </div>
+
+          <div>
+            <label>Autor Principal <span className="obrigatorio">*</span></label>
+            <select name="autor_principal_id" value={form.autor_principal_id} onChange={handleChange} onInvalid={handleInvalid} required >
+              <option value="">Selecione o autor principal</option>
+              {pesquisadores.map(p => (
+                <option key={p.id_pesquisador} value={p.id_pesquisador}>{p.nome}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label>Coautores (Opcional)</label>
+            <select value={coautorSelecionado} onChange={handleAdicionarCoautor}>
+              <option value="" disabled>Selecione para adicionar um coautor...</option>
+              {pesquisadores
+                .filter(p => p.id_pesquisador !== parseInt(form.autor_principal_id) && !form.coautor_ids.includes(p.id_pesquisador))
+                .map(p => (
+                  <option key={p.id_pesquisador} value={p.id_pesquisador}>{p.nome}</option>
+                ))
+              }
+            </select>
+
+            {form.coautor_ids.length > 0 && (
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
+                {form.coautor_ids.map(id => {
+                  const pesq = pesquisadores.find(p => p.id_pesquisador === id);
+                  return (
+                    <span key={id} style={{
+                      background: 'var(--verde)',
+                      color: 'white',
+                      padding: '6px 12px',
+                      borderRadius: '16px',
+                      fontSize: '0.85rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      {pesq?.nome}
+                      <FaTimes style={{ cursor: 'pointer', opacity: 0.8 }} onClick={() => removerCoautor(id)} title="Remover coautor" />
+                    </span>
+                  )
+                })}
+              </div>
+            )}
+          </div>
           
           <div>
             <label>Status</label>
             <select name="status" value={form.status} onChange={handleChange}>
-              <option value="No Rascunho">No Rascunho</option>
+              <option value="Rascunho">Rascunho</option>
               <option value="Em Andamento">Em Andamento</option>
               <option value="Publicado">Publicado</option>
             </select>
@@ -130,7 +223,7 @@ function NovoArtigo() {
             </>
           )}
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '8px' }}>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '16px' }}>
             <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>Cancelar</button>
             <button type="submit" className="btn-primary" disabled={loading}>{loading ? 'Salvando...' : 'Submeter'}</button>
           </div>

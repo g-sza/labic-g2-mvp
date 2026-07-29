@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createProjeto, getPesquisadores } from '../services/api'
+import { createProjeto, getPesquisadores, associarPesquisadorProjeto } from '../services/api'
 import { FaTimes, FaCheck } from 'react-icons/fa'
 
 function NovoProjeto() {
@@ -71,13 +71,18 @@ function NovoProjeto() {
     
     try {
       const payload = { ...form }
+    
+      payload.pesquisador_id = parseInt(payload.pesquisadorResponsavel)
+      delete payload.pesquisadorResponsavel
+
       if (payload.data_inicio === '') payload.data_inicio = null
       if (payload.data_fim === '') payload.data_fim = null
 
       await createProjeto(payload)
       navigate('/dashboard')
+      
     } catch (error) {
-      setErro('Erro ao cadastrar projeto. Tente novamente.')
+      setErro('Erro ao cadastrar projeto. Verifique os dados e tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -111,7 +116,7 @@ function NovoProjeto() {
             <select name="pesquisadorResponsavel" value={form.pesquisadorResponsavel} onChange={handleChange} onInvalid={handleInvalid} required >
               <option value="">Selecione um pesquisador</option>
               {pesquisadores.map(p => (
-                <option key={p.id_pesquisador} value={p.nome}>{p.nome}</option>
+                <option key={p.id_pesquisador} value={p.id_pesquisador}>{p.nome}</option>
               ))}
             </select>
           </div>

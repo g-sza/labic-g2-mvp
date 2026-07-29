@@ -10,8 +10,29 @@ def get_artigos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(ArtigoModel).offset(skip).limit(limit).all()
 
 def create_artigo(db: Session, artigo: ArtigoCreate):
-    db_artigo = ArtigoModel(**artigo.model_dump())
+    dados_artigo = artigo.model_dump(exclude={"autor_principal_id", "coautor_ids"})
+    db_artigo = ArtigoModel(**dados_artigo)
+    
     db.add(db_artigo)
+    db.flush() 
+    
+    assoc_principal = PesquisadorArtigoModel(
+        id_artigo=db_artigo.id_artigo,
+        id_pesquisador=artigo.autor_principal_id,
+        is_autor_publicante=True
+    )
+    db.add(assoc_principal)
+    
+    if artigo.coautor_ids:
+        for id_coautor in artigo.coautor_ids:
+            if id_coautor != artigo.autor_principal_id:
+                assoc_coautor = PesquisadorArtigoModel(
+                    id_artigo=db_artigo.id_artigo,
+                    id_pesquisador=id_coautor,
+                    is_autor_publicante=False
+                )
+                db.add(assoc_coautor)
+    
     db.commit()
     db.refresh(db_artigo)
     return db_artigo

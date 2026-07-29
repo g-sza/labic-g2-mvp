@@ -1,8 +1,8 @@
 // ============================================
-// API - CONEXÃO COM O BACKEND REAL
+// API - CONEXÃO COM O BACKEND
 // ============================================
 
-const API_URL = 'https://labic-api.onrender.com'
+const API_URL = import.meta.env.API_URL
 
 // ============================================
 // FUNÇÃO PARA PEGAR O TOKEN
@@ -136,6 +136,34 @@ export async function deleteArtigo(id) {
   const resposta = await fetch(`${API_URL}/artigos/${id}`, {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${token}` },
+  })
+  if (!resposta.ok) {
+    throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`)
+  }
+  return resposta.json()
+}
+
+// ============================================
+// ASSOCIAÇÕES
+// ============================================
+
+export async function associarPesquisadorProjeto(idProjeto, idPesquisador, papel = "Participante") {
+  const token = getToken()
+  const resposta = await fetch(`${API_URL}/projetos/${idProjeto}/pesquisadores/${idPesquisador}?papel=${papel}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+  if (!resposta.ok) {
+    throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`)
+  }
+  return resposta.json()
+}
+
+export async function associarPesquisadorArtigo(idArtigo, idPesquisador, isAutorPublicante = true) {
+  const token = getToken()
+  const resposta = await fetch(`${API_URL}/artigos/${idArtigo}/pesquisadores/${idPesquisador}?is_autor_publicante=${isAutorPublicante}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` }
   })
   if (!resposta.ok) {
     throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`)
