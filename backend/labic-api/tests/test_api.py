@@ -74,6 +74,7 @@ def test_regra_negocio_artigo_publicado(token_admin):
     headers = {"Authorization": f"Bearer {token_admin}"}
     payload = {
         "titulo": "Artigo Incompleto",
+        "autor_principal_id": 1,
         "status": "Publicado",
         "resumo": "Um resumo",
         "metodologia": "Metodologia",
@@ -100,4 +101,4 @@ def test_exclusao_pesquisador_com_seguranca(token_admin):
     id_criado = res_criacao.json()["id_pesquisador"]
     
     res_delecao = client.delete(f"/pesquisadores/{id_criado}", headers=headers)
-    assert res_delecao.status_code == 200
+    assert res_delecao.status_code == 204
