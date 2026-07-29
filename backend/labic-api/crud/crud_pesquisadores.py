@@ -22,6 +22,14 @@ def update_pesquisador(db: Session, db_pesquisador: models.PesquisadorModel, pes
     return db_pesquisador
     
 def delete_pesquisador(db: Session, db_pesquisador: models.PesquisadorModel):
+    db.query(models.PesquisadorProjetoModel).filter(
+        models.PesquisadorProjetoModel.id_pesquisador == db_pesquisador.id_pesquisador
+    ).delete()
+    
+    db.query(models.PesquisadorArtigoModel).filter(
+        models.PesquisadorArtigoModel.id_pesquisador == db_pesquisador.id_pesquisador
+    ).delete()
+    
     db.delete(db_pesquisador)
     db.commit()
     return True
