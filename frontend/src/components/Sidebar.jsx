@@ -2,12 +2,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { 
   FaHome, FaInfoCircle, FaSearch, FaEnvelope, 
-  FaUsers, FaProjectDiagram, FaFileAlt, 
-  FaSignInAlt, FaSignOutAlt,
-  FaBars, FaTimes, FaUniversity, FaCog,
-  FaUserPlus, FaPlus, FaTrash, FaEdit,
-  FaPhone, FaMapMarkerAlt, FaPaperPlane,
-  FaFlask, FaLightbulb, FaBook
+  FaUserPlus, FaPlus, FaSignInAlt, FaSignOutAlt,
+  FaBars, FaTimes, FaUniversity, FaAdjust
 } from 'react-icons/fa'
 import { MdDashboard } from 'react-icons/md'
 
@@ -21,7 +17,7 @@ function Sidebar() {
   useEffect(() => {
     const token = localStorage.getItem('labic_token')
     setLogado(!!token)
-  }, [])
+  }, [location])
 
   function ligarContraste() {
     setContrasteAtivo(!contrasteAtivo)
@@ -66,14 +62,15 @@ function Sidebar() {
           <span>LABIC</span>
         </div>
 
-        {/* Usuário logado */}
-        <div className="sidebar-usuario">
-          <div className="avatar">MA</div>
-          <div className="usuario-info">
-            <strong>Miqueas Andrade</strong>
-            <span>admin@labic.com</span>
+        {logado && (
+          <div className="sidebar-usuario">
+            <div className="avatar">MA</div>
+            <div className="usuario-info">
+              <strong>Miqueas Andrade</strong>
+              <span>admin@labic.com</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Menu de navegação */}
         <nav className="sidebar-nav">
@@ -85,65 +82,59 @@ function Sidebar() {
           </div>
 
           {/* Páginas Institucionais */}
-          <div className="menu-categoria">Páginas Institucionais</div>
+          <div className="menu-categoria">Institucional</div>
           <div className={`menu-item ${isActive('/sobre') ? 'active' : ''}`}>
-            <Link to="/sobre" onClick={fecharMenu}>
-              <FaInfoCircle /> Sobre
-            </Link>
+            <Link to="/sobre" onClick={fecharMenu}><FaInfoCircle /> Sobre</Link>
           </div>
           <div className={`menu-item ${isActive('/linhas-pesquisa') ? 'active' : ''}`}>
-            <Link to="/linhas-pesquisa" onClick={fecharMenu}>
-              <FaSearch /> Linhas de Pesquisa
-            </Link>
+            <Link to="/linhas-pesquisa" onClick={fecharMenu}><FaSearch /> Linhas de Pesquisa</Link>
           </div>
           <div className={`menu-item ${isActive('/contato') ? 'active' : ''}`}>
-            <Link to="/contato" onClick={fecharMenu}>
-              <FaEnvelope /> Contato
-            </Link>
+            <Link to="/contato" onClick={fecharMenu}><FaEnvelope /> Contato</Link>
           </div>
 
-          {/* Gestão */}
-          <div className="menu-categoria">Gestão</div>
+          {/* Consulta Pública */}
+          <div className="menu-categoria">Consulta & Dados</div>
           <div className={`menu-item ${isActive('/dashboard') ? 'active' : ''}`}>
             <Link to="/dashboard" onClick={fecharMenu}>
-              <MdDashboard /> Dashboard
-            </Link>
-          </div>
-          <div className={`menu-item ${isActive('/novo-pesquisador') ? 'active' : ''}`}>
-            <Link to="/novo-pesquisador" onClick={fecharMenu}>
-              <FaUserPlus /> Novo Pesquisador
-            </Link>
-          </div>
-          <div className={`menu-item ${isActive('/novo-projeto') ? 'active' : ''}`}>
-            <Link to="/novo-projeto" onClick={fecharMenu}>
-              <FaPlus /> Novo Projeto
-            </Link>
-          </div>
-          <div className={`menu-item ${isActive('/novo-artigo') ? 'active' : ''}`}>
-            <Link to="/novo-artigo" onClick={fecharMenu}>
-              <FaPlus /> Novo Artigo
+              <MdDashboard /> {'Dashboard'}
             </Link>
           </div>
 
-          {/* Administração */}
-          <div className="menu-categoria">Administração</div>
+          {/* Ações restritas para Administradores */}
+          {logado && (
+            <>
+              <div className="menu-categoria">Administração</div>
+              <div className={`menu-item ${isActive('/novo-pesquisador') ? 'active' : ''}`}>
+                <Link to="/novo-pesquisador" onClick={fecharMenu}><FaUserPlus /> Novo Pesquisador</Link>
+              </div>
+              <div className={`menu-item ${isActive('/novo-projeto') ? 'active' : ''}`}>
+                <Link to="/novo-projeto" onClick={fecharMenu}><FaPlus /> Novo Projeto</Link>
+              </div>
+              <div className={`menu-item ${isActive('/novo-artigo') ? 'active' : ''}`}>
+                <Link to="/novo-artigo" onClick={fecharMenu}><FaPlus /> Novo Artigo</Link>
+              </div>
+            </>
+          )}
+
+          {/* Sistema */}
+          <div className="menu-divider"></div>
           {logado ? (
-            <div className="menu-item" onClick={() => { sair(); fecharMenu(); }}>
-              <FaSignOutAlt /> Sair
+            <div className="menu-item">
+              <div onClick={() => { sair(); fecharMenu(); }}>
+                <FaSignOutAlt /> Sair
+              </div>
             </div>
           ) : (
             <div className={`menu-item ${isActive('/login') ? 'active' : ''}`}>
-              <Link to="/login" onClick={fecharMenu}>
-                <FaSignInAlt /> Login
-              </Link>
+              <Link to="/login" onClick={fecharMenu}><FaSignInAlt /> Login</Link>
             </div>
           )}
 
           {/* Acessibilidade */}
-          <div className="menu-divider"></div>
-          <div className="menu-item">
+          <div className="menu-item" style={{ marginTop: '24px' }}>
             <button className="btn-contraste-sidebar" onClick={ligarContraste}>
-              <span style={{ fontSize: '20px' }}>🌓</span> Alto Contraste
+              <FaAdjust size={20} /> Alto Contraste
             </button>
           </div>
         </nav>
