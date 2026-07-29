@@ -1,37 +1,68 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createProjeto, getPesquisadores } from '../services/api'
+import { FaTimes, FaCheck } from 'react-icons/fa'
 
 function NovoProjeto() {
   const navigate = useNavigate()
   const [pesquisadores, setPesquisadores] = useState([])
+  
   const [form, setForm] = useState({ 
     titulo: '', 
     descricao: '', 
     metodologia: '', 
     pesquisadorResponsavel: '',
-    status: 'Ativo'
+    data_inicio: '',
+    data_fim: '',
+    status: 'Em Planejamento' 
   })
+  
   const [erro, setErro] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const exigeDataInicio = form.status === 'Em Andamento' || form.status === 'Concluido'
+  const exigeDataFim = form.status === 'Concluido'
+
   useEffect(() => {
     async function carregar() {
-      const dados = await getPesquisadores()
-      setPesquisadores(dados)
+      try {
+        const dados = await getPesquisadores()
+        setPesquisadores(dados)
+      } catch (error) {
+        console.error("Erro ao carregar pesquisadores", error)
+      }
     }
     carregar()
   }, [])
 
   function handleChange(e) {
+    e.target.setCustomValidity('');
     setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  function handleInvalid(e) {
+    if (e.target.validity.valueMissing) {
+      e.target.setCustomValidity('Este campo é obrigatório.');
+    } else {
+      e.target.setCustomValidity('Valor inválido.');
+    }
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
     
     if (!form.titulo || !form.descricao || !form.metodologia || !form.pesquisadorResponsavel) {
-      setErro('Preencha todos os campos obrigatórios')
+      setErro('Preencha os campos base obrigatórios.')
+      return
+    }
+
+    if (exigeDataInicio && !form.data_inicio) {
+      setErro('Projetos em andamento ou concluídos exigem uma Data de Início.')
+      return
+    }
+
+    if (exigeDataFim && !form.data_fim) {
+      setErro('Projetos concluídos exigem uma Data de Fim.')
       return
     }
 
@@ -39,10 +70,14 @@ function NovoProjeto() {
     setErro('')
     
     try {
-      await createProjeto(form)
+      const payload = { ...form }
+      if (payload.data_inicio === '') payload.data_inicio = null
+      if (payload.data_fim === '') payload.data_fim = null
+
+      await createProjeto(payload)
       navigate('/dashboard')
     } catch (error) {
-      setErro('Erro ao cadastrar. Tente novamente.')
+      setErro('Erro ao cadastrar projeto. Tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -58,76 +93,55 @@ function NovoProjeto() {
         <form className="formulario" onSubmit={handleSubmit}>
           <div>
             <label>Título <span className="obrigatorio">*</span></label>
-            <input 
-              type="text" 
-              name="titulo"
-              placeholder="Digite o título do projeto"
-              value={form.titulo}
-              onChange={handleChange}
-              required 
-            />
+            <input type="text" name="titulo" value={form.titulo} onChange={handleChange} onInvalid={handleInvalid} required />
           </div>
           
           <div>
             <label>Descrição <span className="obrigatorio">*</span></label>
-            <textarea 
-              name="descricao"
-              rows="3"
-              placeholder="Descreva o projeto"
-              value={form.descricao}
-              onChange={handleChange}
-              required
-            />
+            <textarea name="descricao" rows="3" value={form.descricao} onChange={handleChange} onInvalid={handleInvalid} required />
           </div>
           
           <div>
             <label>Metodologia <span className="obrigatorio">*</span></label>
-            <textarea 
-              name="metodologia"
-              rows="3"
-              placeholder="Descreva a metodologia"
-              value={form.metodologia}
-              onChange={handleChange}
-              required
-            />
+            <textarea name="metodologia" rows="3" value={form.metodologia} onChange={handleChange} onInvalid={handleInvalid} required />
           </div>
           
           <div>
             <label>Pesquisador Responsável <span className="obrigatorio">*</span></label>
-            <select 
-              name="pesquisadorResponsavel"
-              value={form.pesquisadorResponsavel}
-              onChange={handleChange}
-              required
-            >
+            <select name="pesquisadorResponsavel" value={form.pesquisadorResponsavel} onChange={handleChange} onInvalid={handleInvalid} required >
               <option value="">Selecione um pesquisador</option>
               {pesquisadores.map(p => (
-                <option key={p.id} value={p.nome}>{p.nome}</option>
+                <option key={p.id_pesquisador} value={p.nome}>{p.nome}</option>
               ))}
             </select>
           </div>
           
           <div>
             <label>Status</label>
-            <select 
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-            >
-              <option value="Ativo">Ativo</option>
-              <option value="Concluído">Concluído</option>
-              <option value="Pausado">Pausado</option>
-              <option value="Cancelado">Cancelado</option>
+            <select name="status" value={form.status} onChange={handleChange}>
+              <option value="Em Planejamento">Em Planejamento</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Concluido">Concluído</option>
             </select>
           </div>
+
+          {exigeDataInicio && (
+            <div>
+              <label>Data de Início <span className="obrigatorio">*</span></label>
+              <input type="date" name="data_inicio" value={form.data_inicio} onChange={handleChange} onInvalid={handleInvalid} required={exigeDataInicio} />
+            </div>
+          )}
+
+          {exigeDataFim && (
+            <div>
+              <label>Data de Conclusão <span className="obrigatorio">*</span></label>
+              <input type="date" name="data_fim" value={form.data_fim} onChange={handleChange} onInvalid={handleInvalid} required={exigeDataFim} />
+            </div>
+          )}
           
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '8px' }}>
-            <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>
-              Cancelar
-            </button>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Salvando...' : 'Cadastrar'}
-            </button>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '16px' }}>
+            <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}><FaTimes /> Cancelar</button>
+            <button type="submit" className="btn-primary" disabled={loading}><FaCheck /> {loading ? 'Salvando...' : 'Cadastrar'}</button>
           </div>
         </form>
       </div>
