@@ -12,7 +12,7 @@ function Contato() {
 
   return (
     <div className="pagina">
-      <h2>📬 Fale Conosco</h2>
+      <h2>Fale Conosco</h2>
       
       <div className="grid">
         <div>
@@ -21,16 +21,16 @@ function Contato() {
             <p>
               Rua da Inovação, 1000<br />
               Bairro Tecnológico<br />
-              São Paulo - SP, 01234-567
+              Aracaju - SE, 01234-567
             </p>
           </div>
           
           <div className="card" style={{ marginTop: '1rem' }}>
             <h3><FaPhone color="#0F6B4F" /> Contato</h3>
             <p>
-              Telefone: (11) 3456-7890<br />
-              <FaEnvelope color="#0F6B4F" /> contato@labic.edu.br<br />
-              Horário: Segunda a Sexta, 9h às 18h
+              <strong>Telefone:</strong> (11) 3456-7890<br />
+              <strong>Email:</strong>  contato@labic.edu.br<br />
+              <strong>Horário:</strong> Segunda a Sexta, 9h às 18h
             </p>
           </div>
         </div>
@@ -40,7 +40,7 @@ function Contato() {
           
           {enviado && (
             <p style={{ color: 'green', background: '#e8f5e9', padding: '10px', borderRadius: '8px' }}>
-              ✅ Mensagem enviada com sucesso!
+              Mensagem enviada com sucesso!
             </p>
           )}
           
