@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from schemas.artigos_schema import ArtigoCreate, ArtigoUpdate
-from models.artigos import ArtigoModel, PesquisadorArtigoModel 
+from models.artigos import ArtigoModel
+from models.associacoes import PesquisadorArtigoModel
 
 def get_artigo(db: Session, artigo_id: int):
     return db.query(ArtigoModel).filter(ArtigoModel.id_artigo == artigo_id).first()

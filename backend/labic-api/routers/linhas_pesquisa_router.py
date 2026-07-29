@@ -1,26 +1,38 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from database import get_db
+from crud import crud_linhas_pesquisa
+from schemas.linhas_pesquisa_schema import LinhasPesquisaCreate, LinhasPesquisaUpdate, LinhasPesquisaResponse
+from core.security import verificar_permissao_admin
 
 router = APIRouter(prefix="/linhas-pesquisa", tags=["Linhas de Pesquisa"])
 
-@router.get("/")
-def listar_linhas():
-    return [
-        {"id": 1, "nome": "Inteligência Artificial", "descricao": "Pesquisas em IA e ML"},
-        {"id": 2, "nome": "Engenharia de Software", "descricao": "Métodos e processos de software"},
-    ]
+@router.get("/", response_model=list[LinhasPesquisaResponse])
+def listar_linhas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud_linhas_pesquisa.get_linhas(db=db, skip=skip, limit=limit)
 
-@router.get("/{id}")
-def buscar_linha(id: int):
-    return {"id": id, "nome": "Inteligência Artificial", "descricao": "Pesquisas em IA e ML"}
+@router.get("/{id}", response_model=LinhasPesquisaResponse)
+def buscar_linha(id: int, db: Session = Depends(get_db)):
+    db_linha = crud_linhas_pesquisa.get_linha(db=db, linha_id=id)
+    if db_linha is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Linha de pesquisa não encontrada")
+    return db_linha
 
-@router.post("/")
-def criar_linha(dados: dict):
-    return {"mensagem": "Linha de pesquisa criada com sucesso", "dados": dados}
+@router.post("/", response_model=LinhasPesquisaResponse, status_code=status.HTTP_201_CREATED)
+def criar_linha(linha: LinhasPesquisaCreate, db: Session = Depends(get_db), admin=Depends(verificar_permissao_admin)):
+    return crud_linhas_pesquisa.create_linha(db=db, linha=linha)
 
-@router.put("/{id}")
-def atualizar_linha(id: int, dados: dict):
-    return {"mensagem": f"Linha de pesquisa {id} atualizada com sucesso", "dados": dados}
+@router.put("/{id}", response_model=LinhasPesquisaResponse)
+def atualizar_linha(id: int, linha_atualizada: LinhasPesquisaUpdate, db: Session = Depends(get_db), admin=Depends(verificar_permissao_admin)):
+    db_linha = crud_linhas_pesquisa.get_linha(db=db, linha_id=id)
+    if db_linha is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Linha de pesquisa não encontrada")
+    return crud_linhas_pesquisa.update_linha(db=db, db_linha=db_linha, linha_atualizada=linha_atualizada)
 
-@router.delete("/{id}")
-def deletar_linha(id: int):
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def deletar_linha(id: int, db: Session = Depends(get_db), admin=Depends(verificar_permissao_admin)):
+    db_linha = crud_linhas_pesquisa.get_linha(db=db, linha_id=id)
+    if db_linha is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Linha de pesquisa não encontrada")
+    crud_linhas_pesquisa.delete_linha(db=db, db_linha=db_linha)
     return {"mensagem": f"Linha de pesquisa {id} deletada com sucesso"}
