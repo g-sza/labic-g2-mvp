@@ -43,22 +43,40 @@ function Dashboard() {
 
   async function handleDeletePesquisador(id) {
     if (window.confirm('Tem certeza que deseja excluir este pesquisador?')) {
-      await deletePesquisador(id)
-      carregarDados()
+      try {
+        await deletePesquisador(id)
+        alert('Pesquisador excluído com sucesso!')
+        carregarDados()
+      } catch (error) {
+        console.error(error)
+        alert('Erro ao excluir: Este pesquisador provavelmente está vinculado a um Artigo ou Projeto. Remova as associações dele primeiro.')
+      }
     }
   }
 
   async function handleDeleteProjeto(id) {
     if (window.confirm('Tem certeza que deseja excluir este projeto?')) {
-      await deleteProjeto(id)
-      carregarDados()
+      try {
+        await deleteProjeto(id)
+        alert('Projeto excluído com sucesso!')
+        carregarDados()
+      } catch (error) {
+        console.error(error)
+        alert('Erro ao excluir o projeto. Verifique dependências.')
+      }
     }
   }
 
   async function handleDeleteArtigo(id) {
     if (window.confirm('Tem certeza que deseja excluir este artigo?')) {
-      await deleteArtigo(id)
-      carregarDados()
+      try {
+        await deleteArtigo(id)
+        alert('Artigo excluído com sucesso!')
+        carregarDados()
+      } catch (error) {
+        console.error(error)
+        alert('Erro ao excluir o artigo.')
+      }
     }
   }
 

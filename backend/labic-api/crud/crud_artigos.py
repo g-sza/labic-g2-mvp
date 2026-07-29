@@ -45,6 +45,9 @@ def update_artigo(db: Session, db_artigo: ArtigoModel, artigo_atualizado: Artigo
     return db_artigo
 
 def delete_artigo(db: Session, db_artigo: ArtigoModel):
+    from models.associacoes import PesquisadorArtigoModel
+    db.query(PesquisadorArtigoModel).filter(PesquisadorArtigoModel.id_artigo == db_artigo.id_artigo).delete()
+    
     db.delete(db_artigo)
     db.commit()
     return True

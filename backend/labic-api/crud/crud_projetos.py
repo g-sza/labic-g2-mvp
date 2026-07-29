@@ -33,6 +33,10 @@ def update_projeto(db: Session, db_projeto: models.ProjetoModel, projeto_atualiz
     return db_projeto
 
 def delete_projeto(db: Session, db_projeto: models.ProjetoModel):
+    db.query(models.PesquisadorProjetoModel).filter(
+        models.PesquisadorProjetoModel.id_projeto == db_projeto.id_projeto
+    ).delete()
+    
     db.delete(db_projeto)
     db.commit()
     return True
