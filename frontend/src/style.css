@@ -255,6 +255,8 @@ body {
   min-height: 100vh;
   transition: margin-left 0.3s ease;
   width: 100%;
+  display: flex;             
+  flex-direction: column
 }
 
 @media (max-width: 768px) {
@@ -267,7 +269,8 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px;
-  min-height: calc(100vh - 200px);
+  flex: 1;                   
+  width: 100%;
 }
 
 .home,
@@ -967,4 +970,10 @@ button:disabled,
 .high-contrast .aba .badge {
   background: #FFFFFF !important;
   color: #000000 !important;
+}
+
+.high-contrast .card svg,
+.high-contrast h2 svg,
+.high-contrast label svg {
+  color: #FFFF00 !important;
 }
