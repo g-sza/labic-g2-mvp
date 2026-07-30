@@ -1,8 +1,13 @@
 import os
-from database import SessionLocal
+from dotenv import load_dotenv
+load_dotenv()
+
+from database import SessionLocal, engine, Base
 from models.pesquisadores import PesquisadorModel
 from core.security import gerar_hash_senha
 from core.logger import logger
+
+Base.metadata.create_all(bind=engine)
 
 def criar_primeiro_admin():
     db = SessionLocal()
