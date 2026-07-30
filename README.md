@@ -147,10 +147,10 @@ Lá você pode testar rotas e simular requisições diretamente pela interface v
 
 3. Crie um arquivo chamado `.env` dentro da pasta frontend com o seguinte:
    ```text
-   VITE_API_URL="http://127.0.0.1:8000" (link do terminal anterior)
+   VITE_API_URL="http://127.0.0.1:8000"
    ``` 
 
-4. Instale as dependências do Node:
+4. Instale as dependências do Node na pasta frontend:
    ```bash
    npm install
    ``` 
@@ -169,13 +169,13 @@ Lá você pode testar rotas e simular requisições diretamente pela interface v
 Com a API rodando localmente, você pode validar a integridade do sistema com testes automatizados:
 
 1. Testes Unitários:
-   - Abra um terminal na pasta `backend/labic-api/` com o venv ativado e execute:
+   - Abra um terminal na pasta `backend/labic-api/` **com o ambiente virtual ativado** (passo 1.4) e execute:
       ```bash
       pytest tests/test_api.py
       ``` 
 
 2. Testes de Integração (E2E):
-   - Abra um terminal na raiz do projeto (`labic-g2-mvp/`) com o venv ativado e execute:
+   - Abra um terminal na raiz do projeto (`labic-g2-mvp/`) **com o ambiente virtual ativado** (passo 1.4) e execute:
       ```bash
       python test_integracao.py
       ``` 
