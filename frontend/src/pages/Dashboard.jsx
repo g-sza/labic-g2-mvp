@@ -8,6 +8,7 @@ function Dashboard() {
   const navigate = useNavigate()
   
   const [logado, setLogado] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [aba, setAba] = useState('pesquisadores')
   const [pesquisadores, setPesquisadores] = useState([])
   const [projetos, setProjetos] = useState([])
@@ -15,7 +16,11 @@ function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLogado(!!localStorage.getItem('labic_token'))
+    const token = localStorage.getItem('labic_token')
+    const admin = localStorage.getItem('labic_is_admin') === 'true'
+    
+    setLogado(!!token)
+    setIsAdmin(admin)
     
     if (location.state?.aba) {
       setAba(location.state.aba)
@@ -86,7 +91,7 @@ function Dashboard() {
         <h2>{'Dashboard'}</h2>
         
         {/* Se for Admin, mostra os botões de criação */}
-        {logado && (
+        {logado && isAdmin && (
           <div className="dashboard-actions">
             <button className="btn-acao" onClick={() => navigate('/novo-pesquisador')}>
               <FaUserPlus /> Novo Pesquisador
@@ -123,7 +128,7 @@ function Dashboard() {
                 <h3 style={{ margin: 0, wordBreak: 'break-word' }}>
                   {p.nome}
                 </h3>
-                {logado && (
+                {logado && isAdmin && (
                   <button className="btn-excluir" style={{ flexShrink: 0 }} onClick={() => handleDeletePesquisador(p.id_pesquisador)}>
                     <FaTrash /> Excluir
                   </button>
@@ -132,7 +137,7 @@ function Dashboard() {
               <div>
                 <p><strong>Titulação:</strong> {p.titulacao || 'Não informada'}</p>
                 <p><strong>Vínculo:</strong> {p.tipo_vinculo || 'Não informado'}</p>
-                {logado && <p><strong>Email:</strong> {p.email}</p>} 
+                {logado && isAdmin && <p><strong>Email:</strong> {p.email}</p>} 
               </div>
             </div>
           ))}
@@ -147,7 +152,7 @@ function Dashboard() {
                 <h3 style={{ margin: 0, wordBreak: 'break-word' }}>
                   {p.titulo}
                 </h3>
-                {logado && (
+                {logado && isAdmin && (
                   <button className="btn-excluir" style={{ flexShrink: 0 }} onClick={() => handleDeleteProjeto(p.id_projeto)}>
                     <FaTrash /> Excluir
                   </button>
@@ -170,7 +175,7 @@ function Dashboard() {
                 <h3 style={{ margin: 0, wordBreak: 'break-word' }}>
                   {a.titulo}
                 </h3>
-                {logado && (
+                {logado && isAdmin && (
                   <button className="btn-excluir" style={{ flexShrink: 0 }} onClick={() => handleDeleteArtigo(a.id_artigo)}>
                     <FaTrash /> Excluir
                   </button>

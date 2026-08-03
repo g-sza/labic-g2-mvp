@@ -11,12 +11,15 @@ function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const [logado, setLogado] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [menuAberto, setMenuAberto] = useState(false)
   const [contrasteAtivo, setContrasteAtivo] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('labic_token')
+    const admin = localStorage.getItem('labic_is_admin') === 'true'
     setLogado(!!token)
+    setIsAdmin(admin)
   }, [location])
 
   function ligarContraste() {
@@ -26,7 +29,9 @@ function Sidebar() {
 
   function sair() {
     localStorage.removeItem('labic_token')
+    localStorage.removeItem('labic_is_admin')
     setLogado(false)
+    setIsAdmin(false)
     navigate('/')
   }
 
@@ -64,10 +69,10 @@ function Sidebar() {
 
         {logado && (
           <div className="sidebar-usuario">
-            <div className="avatar">MA</div>
+            <div className="avatar">A</div>
             <div className="usuario-info">
-              <strong>Miqueas Andrade</strong>
-              <span>admin@labic.com</span>
+              <strong>{isAdmin ? 'Administrador' : 'Usuário'}</strong>
+              <span>Conectado</span>
             </div>
           </div>
         )}
@@ -102,7 +107,7 @@ function Sidebar() {
           </div>
 
           {/* Ações restritas para Administradores */}
-          {logado && (
+          {logado && isAdmin && (
             <>
               <div className="menu-categoria">Administração</div>
               <div className={`menu-item ${isActive('/novo-pesquisador') ? 'active' : ''}`}>

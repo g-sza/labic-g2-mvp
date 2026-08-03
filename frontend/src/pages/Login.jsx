@@ -35,6 +35,7 @@ function Login() {
       const dados = await loginApi(email, senha)
 
       localStorage.setItem('labic_token', dados.access_token)
+      localStorage.setItem('labic_is_admin', dados.is_admin)
       navigate('/dashboard')
       
     } catch (error) {
